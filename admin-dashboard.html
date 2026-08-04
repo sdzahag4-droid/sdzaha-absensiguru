@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#000;
+    color:#fff;
+    padding:20px;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.card{
+    width:100%;
+    max-width:1200px;
+    background:#242424;
+    border-radius:28px;
+    padding:30px;
+    position:relative;
+    box-shadow:0 0 15px rgba(255,255,255,.08);
+}
+
+.copy{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.item{
+    margin-bottom:28px;
+}
+
+.label{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.value{
+    font-size:30px;
+    color:#fff;
+}
+
+hr{
+    border:none;
+    border-top:1px dashed #888;
+    margin:30px 0;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+    transition:.3s;
+}
+
+.menu a:hover{
+    color:#4da3ff;
+    padding-left:10px;
+}
+</style>
+
+</head>
+<body>
+
+<h1 id="welcomeAdmin">Dashboard Admin</h1>
+
+<div class="card">
+
+<div class="copy" title="Salin Info Sesi">📋</div>
+
+<div class="item">
+    <div class="label">Total Guru & Staff</div>
+    <div class="value" id="totalGuru">Memuat...</div>
+</div>
+
+<div class="item">
+    <div class="label">Hadir Hari Ini</div>
+    <div class="value" id="totalHadir" style="color: #4ade80;">Memuat...</div>
+</div>
+
+<div class="item">
+    <div class="label">Belum Hadir</div>
+    <div class="value" id="totalBelumHadir" style="color: #f87171;">Memuat...</div>
+</div>
+
+<hr>
+
+<div class="menu">
+    <a href="#">📚 Data Guru</a>
+    <a href="#">👨‍💼 Data Karyawan</a>
+    <a href="#">📊 Rekap Absensi</a>
+    <a href="#">⚙️ Pengaturan</a>
+    <a href="#" id="btnLogout">🚪 Logout</a>
+</div>
+
+</div>
+
+<!-- Skrip Logika Dashboard Admin -->
+<script>
+  // 1. Cek Keamanan Sesi Login Admin
+  document.addEventListener("DOMContentLoaded", function () {
+    const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+
+    // Jika tidak ada user login atau bukan admin, tendang kembali ke halaman login
+    if (!user || user.role !== "admin") {
+      alert("Akses ditolak! Silakan login sebagai Admin terlebih dahulu.");
+      window.location.href = "login.html";
+      return;
+    }
+
+    // Tampilkan nama admin pada judul
+    document.getElementById("welcomeAdmin").textContent = "Halo, " + user.nama;
+
+    // Contoh data statis sementara atau bisa dihubungkan nanti ke rekap Google Sheets
+    document.getElementById("totalGuru").textContent = "41 Orang";
+    document.getElementById("totalHadir").textContent = "Menunggu data...";
+    document.getElementById("totalBelumHadir").textContent = "Menunggu data...";
+
+    // 2. Fungsi Tombol Logout
+    const btnLogout = document.getElementById("btnLogout");
+    btnLogout.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (confirm("Apakah Anda yakin ingin keluar dari akun Admin?")) {
+        localStorage.removeItem("userLoggedIn");
+        window.location.href = "login.html";
+      }
+    });
+  });
+</script>
+
+</body>
+</html>
