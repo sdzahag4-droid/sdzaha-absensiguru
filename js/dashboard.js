@@ -17,7 +17,33 @@ document.addEventListener("DOMContentLoaded", function () {
   if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
 });
 
-// 3. Fungsi Logout
+// ==========================================
+// 3. FUNGSI NAVIGASI MENU DASHBOARD
+// ==========================================
+
+function bukaScan() {
+  window.location.href = "scan.html";
+}
+
+function bukaAbsenMasuk() {
+  window.location.href = "masuk.html"; // Atau "scan.html?tipe=masuk"
+}
+
+function bukaAbsenPulang() {
+  window.location.href = "pulang.html"; // Atau "scan.html?tipe=pulang"
+}
+
+function bukaRiwayat() {
+  window.location.href = "riwayat.html"; // Atau "rekap.html"
+}
+
+function bukaProfil() {
+  window.location.href = "profil.html";
+}
+
+// ==========================================
+// 4. FUNGSI LOGOUT
+// ==========================================
 function logoutUser() {
   if (confirm("Apakah Anda yakin ingin keluar?")) {
     localStorage.removeItem("userLoggedIn");

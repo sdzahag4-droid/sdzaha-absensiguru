@@ -216,8 +216,8 @@
   <div class="dashboard-card">
     
     <!-- ICON COPY TOP RIGHT -->
-    <div class="card-action-icon" title="Salin Data">
-      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
+    <div class="card-action-icon" title="Logout" onclick="logoutUser()">
+      <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
     </div>
 
     <!-- 1. HEADER LOGO & PROFIL -->
@@ -225,19 +225,19 @@
       <div class="logo-box">
         <i data-lucide="graduation-cap" style="width: 24px; height: 24px;"></i>
       </div>
-      <span class="logo-text">Logo Sekolah</span>
+      <span class="logo-text">SD ZAINUL HASAN</span>
     </div>
 
     <div class="welcome-text">Selamat Datang</div>
-    <div class="user-name">Ahmad Muzammil</div>
-    <div class="user-role">Guru Kelas 4A</div>
+    <div class="user-name" id="namaUser">Guru</div>
+    <div class="user-role" id="jabatanUser">-</div>
 
     <hr class="divider">
 
     <!-- 2. TANGGAL & STATUS -->
     <div class="info-group">
       <div class="info-label">Tanggal</div>
-      <div class="info-value">03 Agustus 2026</div>
+      <div class="info-value" id="tanggalHariIni">03 Agustus 2026</div>
     </div>
 
     <div class="info-group">
@@ -299,13 +299,34 @@
 
   </div>
 
+  <!-- MEMANGGIL FILE JS DASHBOARD -->
+  <script src="js/dashboard.js"></script>
+
   <script>
     // Inisialisasi Lucide Icons
     lucide.createIcons();
 
-    // Fungsi Handler Tombol
+    // Fungsi Pengarah Navigasi Halaman Real
     function handleAction(actionName) {
-      alert('Fitur ' + actionName + ' dipilih!');
+      switch (actionName) {
+        case 'Scan QR':
+          window.location.href = "scan.html";
+          break;
+        case 'Absen Masuk':
+          window.location.href = "scan.html?tipe=masuk";
+          break;
+        case 'Absen Pulang':
+          window.location.href = "scan.html?tipe=pulang";
+          break;
+        case 'Riwayat':
+          window.location.href = "riwayat.html"; // Atau rekap.html
+          break;
+        case 'Profil':
+          window.location.href = "profil.html";
+          break;
+        default:
+          console.warn("Aksi tidak dikenal");
+      }
     }
   </script>
 
