@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halaman Scan QR - Absensi Guru</title>
+  <title>Absen Selfie Guru</title>
 
   <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,9 +12,6 @@
   
   <!-- Lucide Icons -->
   <script src="https://unpkg.com/lucide@latest"></script>
-
-  <!-- HTML5 QR Code Library (Untuk Kamera Scanner) -->
-  <script src="https://unpkg.com/html5-qrcode"></script>
 
   <style>
     :root {
@@ -88,19 +85,6 @@
       position: relative;
     }
 
-    .card-action-icon {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .card-action-icon:hover {
-      color: var(--text-white);
-    }
-
     .divider {
       border: none;
       border-top: 1px dashed var(--divider-color);
@@ -117,30 +101,30 @@
       margin-bottom: 16px;
     }
 
-    /* --- AREA SCANNER / KAMERA --- */
-    .scanner-container {
+    /* --- AREA KAMERA / SELFIE --- */
+    .camera-container {
       width: 100%;
-      min-height: 220px;
+      height: 280px;
       background-color: #000000;
       border: 2px dashed var(--card-border);
       border-radius: 12px;
       overflow: hidden;
       display: flex;
-      flex-direction: column;
       align-items: center;
       justify-content: center;
       margin-bottom: 16px;
       position: relative;
     }
 
-    #reader {
+    #webcamVideo, #photoCanvas {
       width: 100%;
-      border: none !important;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1); /* Mirror effect kamera depan */
     }
 
-    #reader video {
-      border-radius: 8px;
-      object-fit: cover;
+    #photoCanvas {
+      display: none;
     }
 
     .camera-placeholder {
@@ -152,46 +136,8 @@
       color: var(--text-muted);
     }
 
-    /* --- INSTRUKSI & STATUS --- */
-    .instruction-text {
-      font-size: 14px;
-      color: var(--text-white);
-      margin-bottom: 16px;
-      font-weight: 500;
-    }
-
-    .status-container {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-    }
-
-    .status-label {
-      font-size: 13px;
-      color: var(--text-muted);
-    }
-
-    .status-value {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      background-color: var(--badge-red-bg);
-      color: var(--badge-red);
-      padding: 6px 12px;
-      border-radius: 6px;
-      font-size: 14px;
-      font-weight: 600;
-      font-family: 'JetBrains Mono', monospace;
-      width: fit-content;
-    }
-
-    .status-value.success {
-      background-color: var(--badge-green-bg);
-      color: var(--accent-green);
-    }
-
-    /* TOMBOL AKTIFKAN KAMERA */
-    .btn-start-camera {
+    /* BUTTONS */
+    .btn-action {
       width: 100%;
       background-color: var(--accent-blue);
       color: white;
@@ -206,20 +152,25 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 16px;
+      margin-top: 10px;
       transition: opacity 0.2s;
     }
 
-    .btn-start-camera:hover {
+    .btn-action:hover {
       opacity: 0.9;
+    }
+
+    .btn-submit {
+      background-color: var(--accent-green);
+      display: none;
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER TITLE & TOMBOL KEMBALI -->
+  <!-- HEADER -->
   <div class="header-title">
-    <span>Halaman Scan QR</span>
+    <span>Absen Selfie</span>
     <a href="dashboard.html" class="btn-back">
       <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
       <span>Kembali</span>
@@ -228,137 +179,51 @@
 
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
-    
-    <div class="card-action-icon" title="Salin Halaman">
-      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
-    </div>
 
-    <hr class="divider" style="margin-top: 0;">
+    <div class="section-title" id="titleTipeAbsen">ABSEN SELFIE (MASUK)</div>
 
-    <div class="section-title">SCAN QR CODE</div>
-
-    <!-- KOTAK SCANNER KAMERA -->
-    <div class="scanner-container">
-      <div id="reader"></div>
+    <!-- AREA KAMERA -->
+    <div class="camera-container">
       <div class="camera-placeholder" id="cameraPlaceholder">
-        <i data-lucide="qr-code" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
-        <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace;">[ Area Kamera QR ]</span>
+        <i data-lucide="camera" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
+        <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace;">[ Kamera Belum Aktif ]</span>
       </div>
+
+      <video id="webcamVideo" autoplay playsinline style="display: none;"></video>
+      <canvas id="photoCanvas"></canvas>
     </div>
 
-    <div class="instruction-text">Arahkan kamera ke QR Code Sekolah</div>
-
-    <!-- STATUS SCAN -->
-    <div class="status-container">
-      <div class="status-label">Status :</div>
-      <div class="status-value" id="statusBadge">
-        <i data-lucide="x-circle" id="statusIcon" style="width: 14px; height: 14px;"></i>
-        <span id="statusText">Belum Scan</span>
-      </div>
-    </div>
-
-    <button class="btn-start-camera" id="btnToggleCamera">
+    <!-- TOMBOL AKSI -->
+    <button class="btn-action" id="btnBukaKamera">
       <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
-      <span>Buka Kamera</span>
+      <span>Buka Kamera Depan</span>
+    </button>
+
+    <button class="btn-action" id="btnAmbilFoto" style="display: none;">
+      <i data-lucide="aperture" style="width: 18px; height: 18px;"></i>
+      <span>Ambil Foto</span>
+    </button>
+
+    <button class="btn-action btn-submit" id="btnKirimAbsen">
+      <i data-lucide="send" style="width: 18px; height: 18px;"></i>
+      <span>Kirim Absensi Selfie</span>
+    </button>
+
+    <button class="btn-action" id="btnUlangFoto" style="display: none; background-color: #3f3f46;">
+      <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
+      <span>Foto Ulang</span>
     </button>
 
     <hr class="divider">
 
   </div>
 
-  <!-- MEMANGGIL FILE JAVASCRIPT LOKAL -->
+  <!-- MEMANGGIL SCRIPT JS -->
   <script src="js/gps.js"></script>
   <script src="js/scan.js"></script>
 
   <script>
-    // Inisialisasi Icon Lucide
     lucide.createIcons();
-
-    let isCameraActive = false;
-
-    const btnToggleCamera = document.getElementById('btnToggleCamera');
-    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
-    const statusBadge = document.getElementById('statusBadge');
-    const statusText = document.getElementById('statusText');
-    const statusIcon = document.getElementById('statusIcon');
-
-    btnToggleCamera.addEventListener('click', () => {
-      if (!isCameraActive) {
-        startScannerUI();
-      } else {
-        stopScannerUI();
-      }
-    });
-
-    function startScannerUI() {
-      cameraPlaceholder.style.display = 'none';
-      
-      html5QrcodeScanner = new Html5Qrcode("reader");
-      
-      html5QrcodeScanner.start(
-        { facingMode: "environment" }, 
-        {
-          fps: 10,
-          qrbox: { width: 220, height: 220 }
-        },
-        (decodedText) => {
-          // Ketika QR Code Berhasil Terbaca
-          onScanSuccessUI(decodedText);
-        },
-        (errorMessage) => {
-          // Error pemindaian berkala (diabaikan)
-        }
-      ).then(() => {
-        isCameraActive = true;
-        btnToggleCamera.querySelector('span').textContent = "Tutup Kamera";
-      }).catch(err => {
-        alert("Gagal membuka kamera: " + err);
-        cameraPlaceholder.style.display = 'flex';
-      });
-    }
-
-    function stopScannerUI() {
-      if (html5QrcodeScanner) {
-        html5QrcodeScanner.stop().then(() => {
-          html5QrcodeScanner.clear();
-          isCameraActive = false;
-          cameraPlaceholder.style.display = 'flex';
-          btnToggleCamera.querySelector('span').textContent = "Buka Kamera";
-        });
-      }
-    }
-
-    function onScanSuccessUI(decodedText) {
-      stopScannerUI();
-
-      // Perbarui tampilan Status
-      statusBadge.classList.add('success');
-      statusText.textContent = "Berhasil Scan!";
-      
-      statusIcon.setAttribute('data-lucide', 'check-circle');
-      lucide.createIcons();
-
-      // Panggil fungsi pengiriman absensi dari js/scan.js
-      if (typeof prosesKirimAbsensi === "function") {
-        const urlParams = new URLSearchParams(window.location.search);
-        const tipeAbsen = urlParams.get("tipe") || "masuk";
-        
-        // Ambil lokasi GPS jika ada
-        if (typeof dapatkanLokasi === "function") {
-          dapatkanLokasi()
-            .then(gpsData => {
-              prosesKirimAbsensi(tipeAbsen, gpsData.keterangan, decodedText);
-            })
-            .catch(() => {
-              prosesKirimAbsensi(tipeAbsen, "GPS Tidak Aktif", decodedText);
-            });
-        } else {
-          prosesKirimAbsensi(tipeAbsen, "-", decodedText);
-        }
-      } else {
-        alert("QR Code Dipindai: " + decodedText);
-      }
-    }
   </script>
 
 </body>
