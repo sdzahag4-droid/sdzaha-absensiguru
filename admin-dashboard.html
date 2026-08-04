@@ -98,21 +98,21 @@ hr{
 
 <div class="item">
     <div class="label">Hadir Hari Ini</div>
-    <div class="value" id="totalHadir" style="color: #4ade80;">Memuat...</div>
+    <div class="value" id="totalHadir" style="color: #4ade80;">Menunggu data...</div>
 </div>
 
 <div class="item">
     <div class="label">Belum Hadir</div>
-    <div class="value" id="totalBelumHadir" style="color: #f87171;">Memuat...</div>
+    <div class="value" id="totalBelumHadir" style="color: #f87171;">Menunggu data...</div>
 </div>
 
 <hr>
 
 <div class="menu">
-    <a href="#">📚 Data Guru</a>
-    <a href="#">👨‍💼 Data Karyawan</a>
-    <a href="#">📊 Rekap Absensi</a>
-    <a href="#">⚙️ Pengaturan</a>
+    <a href="#" id="menuDataGuru">📚 Data Guru</a>
+    <a href="#" id="menuDataKaryawan">👨‍💼 Data Karyawan</a>
+    <a href="#" id="menuRekap">📊 Rekap Absensi</a>
+    <a href="#" id="menuPengaturan">⚙️ Pengaturan</a>
     <a href="#" id="btnLogout">🚪 Logout</a>
 </div>
 
@@ -120,32 +120,53 @@ hr{
 
 <!-- Skrip Logika Dashboard Admin -->
 <script>
-  // 1. Cek Keamanan Sesi Login Admin
   document.addEventListener("DOMContentLoaded", function () {
+    // 1. Cek Keamanan Sesi Login Admin
     const user = JSON.parse(localStorage.getItem("userLoggedIn"));
 
     // Jika tidak ada user login atau bukan admin, tendang kembali ke halaman login
     if (!user || user.role !== "admin") {
       alert("Akses ditolak! Silakan login sebagai Admin terlebih dahulu.");
-      window.location.href = "login.html";
+      window.location.href = "index.html"; // Sesuaikan ke index.html atau login.html
       return;
     }
 
     // Tampilkan nama admin pada judul
     document.getElementById("welcomeAdmin").textContent = "Halo, " + user.nama;
 
-    // Contoh data statis sementara atau bisa dihubungkan nanti ke rekap Google Sheets
+    // Data Statistik Sementara
     document.getElementById("totalGuru").textContent = "41 Orang";
-    document.getElementById("totalHadir").textContent = "Menunggu data...";
-    document.getElementById("totalBelumHadir").textContent = "Menunggu data...";
+    document.getElementById("totalHadir").textContent = "0 Orang";
+    document.getElementById("totalBelumHadir").textContent = "41 Orang";
 
-    // 2. Fungsi Tombol Logout
+    // 2. Event Klik Menu Navigasi
+    document.getElementById("menuDataGuru").addEventListener("click", function(e) {
+      e.preventDefault();
+      alert("Fitur Data Guru akan segera dikembangkan.");
+    });
+
+    document.getElementById("menuDataKaryawan").addEventListener("click", function(e) {
+      e.preventDefault();
+      alert("Fitur Data Karyawan akan segera dikembangkan.");
+    });
+
+    document.getElementById("menuRekap").addEventListener("click", function(e) {
+      e.preventDefault();
+      alert("Fitur Rekap Absensi akan segera dikembangkan.");
+    });
+
+    document.getElementById("menuPengaturan").addEventListener("click", function(e) {
+      e.preventDefault();
+      alert("Fitur Pengaturan akan segera dikembangkan.");
+    });
+
+    // 3. Fungsi Tombol Logout
     const btnLogout = document.getElementById("btnLogout");
     btnLogout.addEventListener("click", function (e) {
       e.preventDefault();
       if (confirm("Apakah Anda yakin ingin keluar dari akun Admin?")) {
         localStorage.removeItem("userLoggedIn");
-        window.location.href = "login.html";
+        window.location.href = "index.html"; // Mengarah kembali ke halaman login utama
       }
     });
   });
