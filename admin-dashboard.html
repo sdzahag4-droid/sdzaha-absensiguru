@@ -110,7 +110,6 @@ hr{
 
 <div class="menu">
     <a href="#" id="menuDataGuru">📚 Data Guru</a>
-    <a href="#" id="menuDataKaryawan">👨‍💼 Data Karyawan</a>
     <a href="#" id="menuRekap">📊 Rekap Absensi</a>
     <a href="#" id="menuPengaturan">⚙️ Pengaturan</a>
     <a href="#" id="btnLogout">🚪 Logout</a>
@@ -124,10 +123,9 @@ hr{
     // 1. Cek Keamanan Sesi Login Admin
     const user = JSON.parse(localStorage.getItem("userLoggedIn"));
 
-    // Jika tidak ada user login atau bukan admin, tendang kembali ke halaman login
     if (!user || user.role !== "admin") {
       alert("Akses ditolak! Silakan login sebagai Admin terlebih dahulu.");
-      window.location.href = "index.html"; // Sesuaikan ke index.html atau login.html
+      window.location.href = "index.html";
       return;
     }
 
@@ -139,15 +137,10 @@ hr{
     document.getElementById("totalHadir").textContent = "0 Orang";
     document.getElementById("totalBelumHadir").textContent = "41 Orang";
 
-    // 2. Event Klik Menu Navigasi
+    // 2. Event Klik Menu Navigasi (Data Karyawan sudah dihapus)
     document.getElementById("menuDataGuru").addEventListener("click", function(e) {
       e.preventDefault();
       alert("Fitur Data Guru akan segera dikembangkan.");
-    });
-
-    document.getElementById("menuDataKaryawan").addEventListener("click", function(e) {
-      e.preventDefault();
-      alert("Fitur Data Karyawan akan segera dikembangkan.");
     });
 
     document.getElementById("menuRekap").addEventListener("click", function(e) {
@@ -166,7 +159,7 @@ hr{
       e.preventDefault();
       if (confirm("Apakah Anda yakin ingin keluar dari akun Admin?")) {
         localStorage.removeItem("userLoggedIn");
-        window.location.href = "index.html"; // Mengarah kembali ke halaman login utama
+        window.location.href = "index.html";
       }
     });
   });
