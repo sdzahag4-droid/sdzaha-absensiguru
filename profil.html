@@ -88,7 +88,7 @@
       margin: 18px 0;
     }
 
-    /* PROFIL FOTO */
+    /* PROFIL FOTO INTERAKTIF */
     .profile-avatar-container {
       display: flex;
       flex-direction: column;
@@ -98,8 +98,8 @@
 
     .avatar-wrapper {
       position: relative;
-      width: 90px;
-      height: 90px;
+      width: 96px;
+      height: 96px;
       border-radius: 50%;
       border: 2px solid var(--accent-blue);
       overflow: hidden;
@@ -110,6 +110,25 @@
       width: 100%;
       height: 100%;
       object-fit: cover;
+    }
+
+    .btn-upload-avatar {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      background: rgba(0, 0, 0, 0.65);
+      color: white;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-upload-avatar:hover {
+      background: rgba(59, 130, 246, 0.85);
     }
 
     .status-active {
@@ -258,11 +277,17 @@
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
     
-    <!-- FOTO PROFIL -->
+    <!-- FOTO PROFIL BISA DIKLIK UNTUK EDIT -->
     <div class="profile-avatar-container">
       <div class="avatar-wrapper">
-        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="Avatar" class="avatar-img">
+        <img id="imgAvatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="Avatar" class="avatar-img">
+        <label for="inputFoto" class="btn-upload-avatar" title="Ganti Foto Profil">
+          <i data-lucide="camera" style="width: 16px; height: 16px;"></i>
+        </label>
       </div>
+      <!-- INPUT FILE TERSEMBUNYI -->
+      <input type="file" id="inputFoto" accept="image/*" style="display: none;">
+      
       <div class="status-active">• Status: Aktif</div>
     </div>
 
@@ -271,12 +296,12 @@
     <!-- DATA PROFIL -->
     <div class="info-group">
       <div class="info-label">Nama Lengkap</div>
-      <div class="info-value" id="dispNama">Ahmad Muzammil</div>
+      <div class="info-value" id="dispNama">Ahmad Muzammil, M.Pd.I.</div>
     </div>
 
     <div class="info-group">
       <div class="info-label">Jabatan</div>
-      <div class="info-value" id="dispJabatan">Guru Kelas 4A</div>
+      <div class="info-value" id="dispJabatan">Kep. Sekolah</div>
     </div>
 
     <hr class="divider">
@@ -346,23 +371,54 @@
     lucide.createIcons();
 
     document.addEventListener("DOMContentLoaded", function () {
-      // 1. Ambil data login
+      // 1. Dapatkan user logged in
       const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+      const userKey = user ? user.username : "guest";
+
       if (user) {
-        document.getElementById("dispNama").textContent = user.nama || "Ahmad Muzammil";
-        document.getElementById("dispJabatan").textContent = user.jabatan || "Guru Kelas 4A";
+        document.getElementById("dispNama").textContent = user.nama || "Ahmad Muzammil, M.Pd.I.";
+        document.getElementById("dispJabatan").textContent = user.jabatan || "Kep. Sekolah";
       }
 
-      // 2. Ambil data tambahan dari localStorage (jika sudah pernah diedit)
-      const extraInfo = JSON.parse(localStorage.getItem("userExtraProfil")) || {
+      // 2. Load foto khusus user ini dari localStorage
+      const savedAvatar = localStorage.getItem("userAvatar_" + userKey);
+      if (savedAvatar) {
+        document.getElementById("imgAvatar").src = savedAvatar;
+      }
+
+      // 3. Load extra info (HP, WA, Telegram)
+      const extraInfo = JSON.parse(localStorage.getItem("userExtraProfil_" + userKey)) || {
         noHp: "0812-3456-7890",
         wa: "+62 812-3456-7890",
         telegram: "@ahmad_muzammil"
       };
-
       tampilkanDataExt(extraInfo);
 
-      // 3. Elemen Modal
+      // 4. HANDLER GANTI FOTO PROFIL
+      const inputFoto = document.getElementById("inputFoto");
+      inputFoto.addEventListener("change", function (e) {
+        const file = e.target.files[0];
+        if (file) {
+          // Cek ukuran file (Maksimal 2MB agar storage tidak penuh)
+          if (file.size > 2 * 1024 * 1024) {
+            alert("Ukuran foto terlalu besar! Maksimal 2MB.");
+            return;
+          }
+
+          const reader = new FileReader();
+          reader.onload = function (evt) {
+            const base64Image = evt.target.result;
+            // Tampilkan foto di UI
+            document.getElementById("imgAvatar").src = base64Image;
+            // Simpan ke storage sesuai user
+            localStorage.setItem("userAvatar_" + userKey, base64Image);
+            alert("Foto profil berhasil diperbarui!");
+          };
+          reader.readAsDataURL(file);
+        }
+      });
+
+      // 5. MODAL EDIT DATA PROFIL
       const modal = document.getElementById("modalEdit");
       const btnBuka = document.getElementById("btnBukaModalEdit");
       const btnBatal = document.getElementById("btnBatalEdit");
@@ -384,11 +440,11 @@
         extraInfo.wa = document.getElementById("inputWA").value;
         extraInfo.telegram = document.getElementById("inputTelegram").value;
 
-        localStorage.setItem("userExtraProfil", JSON.stringify(extraInfo));
+        localStorage.setItem("userExtraProfil_" + userKey, JSON.stringify(extraInfo));
         tampilkanDataExt(extraInfo);
         
         modal.style.display = "none";
-        alert("Profil berhasil diperbarui!");
+        alert("Data profil berhasil diperbarui!");
       });
 
       function tampilkanDataExt(data) {
