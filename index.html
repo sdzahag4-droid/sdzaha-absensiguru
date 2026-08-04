@@ -3,11 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<<<<<<< HEAD
-  <title>Login - Portal Presensi Sekolah</title>
-=======
-  <title>Login - Sekolah</title>
->>>>>>> 357bc6f (Initial commit aplikasi absensi guru)
+  <title>Login - Absensi Guru SD Zainul Hasan Genggong</title>
   
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,7 +14,6 @@
   <script src="https://unpkg.com/lucide@latest"></script>
 
   <style>
-    
     :root {
       --primary: #2563eb;
       --primary-hover: #1d4ed8;
@@ -74,15 +69,16 @@
     }
 
     .brand-header h1 {
-      font-size: 22px;
+      font-size: 20px;
       font-weight: 700;
       color: var(--text-main);
+      line-height: 1.3;
     }
 
     .brand-header p {
       font-size: 14px;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 6px;
     }
 
     /* CARD LOGIN */
@@ -280,7 +276,7 @@
       <div class="brand-logo">
         <i data-lucide="shield-check" style="width: 28px; height: 28px;"></i>
       </div>
-      <h1>Portal Presensi</h1>
+      <h1>Absensi Guru<br>SD Zainul Hasan Genggong</h1>
       <p>Masuk ke akun Anda untuk melanjutkan</p>
     </div>
 
@@ -353,7 +349,7 @@
     </div>
 
     <div class="footer-text">
-      &copy; 2026 Portal Presensi Digital Sekolah. All rights reserved.
+      Copyright &copy; 2026 Presensi Digital Sekolah. All rights reserved.
     </div>
 
   </div>
@@ -400,7 +396,7 @@
       });
     });
 
-    // 5. Simulasi Form Submit
+    // 5. Form Submit & Navigasi
     loginForm.addEventListener('submit', (e) => {
       e.preventDefault();
 
@@ -417,13 +413,11 @@
         return;
       }
 
-      // Simulasi Login Sukses & Navigasi Halaman
+      // Navigasi Halaman
       if (selectedRole === 'admin') {
-        // Arahkan ke file dashboard admin jika ada
         window.location.href = 'admin-dashboard.html';
       } else {
-        // Arahkan ke file dashboard guru jika ada
-        window.location.href = 'index.html';
+        window.location.href = 'dashboard.html';
       }
     });
 
@@ -433,8 +427,4 @@
     }
   </script>
 </body>
-<<<<<<< HEAD
 </html>
-=======
-</html>
->>>>>>> 357bc6f (Initial commit aplikasi absensi guru)
