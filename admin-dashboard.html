@@ -137,20 +137,20 @@ hr{
     document.getElementById("totalHadir").textContent = "0 Orang";
     document.getElementById("totalBelumHadir").textContent = "41 Orang";
 
-    // 2. Event Klik Menu Navigasi (Data Karyawan sudah dihapus)
+    // 2. Event Klik Menu Navigasi (Diubah langsung berpindah halaman)
     document.getElementById("menuDataGuru").addEventListener("click", function(e) {
       e.preventDefault();
-      alert("Fitur Data Guru akan segera dikembangkan.");
+      window.location.href = "data-guru.html"; // Mengarahkan ke halaman Data Guru
     });
 
     document.getElementById("menuRekap").addEventListener("click", function(e) {
       e.preventDefault();
-      alert("Fitur Rekap Absensi akan segera dikembangkan.");
+      window.location.href = "rekap.html"; // Mengarahkan ke halaman Rekap Absensi
     });
 
     document.getElementById("menuPengaturan").addEventListener("click", function(e) {
       e.preventDefault();
-      alert("Fitur Pengaturan akan segera dikembangkan.");
+      window.location.href = "pengaturan.html"; // Mengarahkan ke halaman Pengaturan
     });
 
     // 3. Fungsi Tombol Logout
