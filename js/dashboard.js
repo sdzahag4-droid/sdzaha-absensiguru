@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return;
   }
 
-  // 2. Tampilkan Nama dan Jabatan Guru di Dashboard (jika ada elemen HTML-nya)
+  // 2. Tampilkan Nama dan Jabatan Guru di Dashboard
   const namaUserEl = document.getElementById("namaUser");
   const jabatanUserEl = document.getElementById("jabatanUser");
 
@@ -18,28 +18,36 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // ==========================================
-// 3. FUNGSI NAVIGASI MENU DASHBOARD
+// 3. FUNGSI NAVIGASI / AKSI MENU DASHBOARD
 // ==========================================
-
-function bukaScan() {
-  window.location.href = "scan.html";
+function handleAction(actionName) {
+  switch (actionName) {
+    case 'Absen Selfie':
+      window.location.href = "scan.html";
+      break;
+    case 'Absen Masuk':
+      window.location.href = "masuk.html"; // Sesuaikan ke file tujuan Anda
+      break;
+    case 'Absen Pulang':
+      window.location.href = "pulang.html"; // Sesuaikan ke file tujuan Anda
+      break;
+    case 'Riwayat':
+      window.location.href = "riwayat.html";
+      break;
+    case 'Profil':
+      window.location.href = "profil.html";
+      break;
+    default:
+      console.warn("Aksi tidak dikenal:", actionName);
+  }
 }
 
-function bukaAbsenMasuk() {
-  window.location.href = "masuk.html"; // Atau "scan.html?tipe=masuk"
-}
-
-function bukaAbsenPulang() {
-  window.location.href = "pulang.html"; // Atau "scan.html?tipe=pulang"
-}
-
-function bukaRiwayat() {
-  window.location.href = "riwayat.html"; // Atau "rekap.html"
-}
-
-function bukaProfil() {
-  window.location.href = "profil.html";
-}
+// Fungsi alternatif jika dipanggil terpisah
+function bukaScan() { window.location.href = "scan.html"; }
+function bukaAbsenMasuk() { window.location.href = "masuk.html"; }
+function bukaAbsenPulang() { window.location.href = "pulang.html"; }
+function bukaRiwayat() { window.location.href = "riwayat.html"; }
+function bukaProfil() { window.location.href = "profil.html"; }
 
 // ==========================================
 // 4. FUNGSI LOGOUT
