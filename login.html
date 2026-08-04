@@ -1,63 +1,73 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Login Absensi Guru</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login Absensi Guru</title>
 
-<link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/style.css">
 
-<!-- Font Awesome -->
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
-
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
-<div class="container">
+  <div class="container">
+    <div class="login-box">
 
-<div class="login-box">
+      <div class="logo">
+        <img src="images/logo sd zaha.png" alt="Logo" style="width: 60px; height: auto;">
+      </div>
 
-<div class="logo">
-<img src="images/logo sd zaha.png" alt="Logo" style="width: 60px; height: auto;">
-</div>
+      <h2>ABSENSI GURU</h2>
+      <p>SD ZAINUL HASAN GENGGONG</p>
 
-<h2>ABSENSI GURU</h2>
+      <!-- Form Login dengan Event Submit -->
+      <form id="formLogin" onsubmit="prosesSubmitLogin(event)">
 
-<p>SD ZAINUL HASAN GENGGONG</p>
+        <div class="input-group">
+          <i class="fa fa-user"></i>
+          <!-- Tambahan id="username" & required -->
+          <input type="text" id="username" placeholder="Username" required>
+        </div>
 
-<form>
+        <div class="input-group">
+          <i class="fa fa-lock"></i>
+          <!-- Tambahan id="password" & required -->
+          <input type="password" id="password" placeholder="Password" required>
+        </div>
 
-<div class="input-group">
-<i class="fa fa-user"></i>
-<input type="text" placeholder="Username">
-</div>
+        <button type="submit">
+          <i class="fa fa-sign-in-alt"></i> Login
+        </button>
 
-<div class="input-group">
-<i class="fa fa-lock"></i>
-<input type="password" placeholder="Password">
-</div>
+      </form>
 
-<button type="submit">
-<i class="fa fa-sign-in-alt"></i>
-Login
-</button>
+      <div class="footer">
+        © 2026 SD Zainul Hasan Genggong
+      </div>
 
-</form>
+    </div>
+  </div>
 
-<div class="footer">
-© 2026 SD Zainul Hasan Genggong
-</div>
+  <!-- File JavaScript Login Anda -->
+  <script src="js/login.js"></script>
 
-</div>
+  <!-- Script Penghubung Form ke login.js -->
+  <script>
+    function prosesSubmitLogin(event) {
+      // Mencegah halaman reload otomatis
+      event.preventDefault();
 
-</div>
-<!-- Pustaka Utama Firebase (App & Database) -->
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+      // Ambil nilai dari input
+      const userVal = document.getElementById("username").value;
+      const passVal = document.getElementById("password").value;
 
-<!-- File JavaScript Lokal Anda -->
-<script src="js/absensi.js"></script>
+      // Panggil fungsi loginUser dari file js/login.js
+      loginUser(userVal, passVal);
+    }
+  </script>
+
 </body>
 </html>
