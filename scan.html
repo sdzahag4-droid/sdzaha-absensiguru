@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Scan QR</title>
+
+  <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <!-- HTML5 QR Code Library (Untuk Kamera Scanner) -->
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --divider-color: #3f3f46;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+      --badge-red: #ef4444;
+      --badge-red-bg: rgba(239, 68, 68, 0.15);
+      --badge-green-bg: rgba(34, 197, 94, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* --- PAGE HEADER --- */
+    .header-title {
+      width: 100%;
+      max-width: 440px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--text-white);
+    }
+
+    /* --- MAIN CARD --- */
+    .dashboard-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* ICON COPY / ACTION TOP RIGHT */
+    .card-action-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .card-action-icon:hover {
+      color: var(--text-white);
+    }
+
+    /* SEPARATOR / DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--divider-color);
+      margin: 18px 0;
+    }
+
+    /* --- JUDUL HALAMAN --- */
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-white);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* --- AREA SCANNER / KAMERA --- */
+    .scanner-container {
+      width: 100%;
+      min-height: 220px;
+      background-color: #000000;
+      border: 2px dashed var(--card-border);
+      border-radius: 12px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    #reader {
+      width: 100%;
+      border: none !important;
+    }
+
+    #reader video {
+      border-radius: 8px;
+      object-fit: cover;
+    }
+
+    /* IMPRESI PLACEHOLDER TAMPILAN KAMERA DUMMY */
+    .camera-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 30px;
+      color: var(--text-muted);
+    }
+
+    /* --- INSTRUKSI & STATUS --- */
+    .instruction-text {
+      font-size: 14px;
+      color: var(--text-white);
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .status-container {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .status-label {
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+
+    .status-value {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--badge-red-bg);
+      color: var(--badge-red);
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      width: fit-content;
+    }
+
+    .status-value.success {
+      background-color: var(--badge-green-bg);
+      color: var(--accent-green);
+    }
+
+    /* TOMBOL AKTIFKAN KAMERA */
+    .btn-start-camera {
+      width: 100%;
+      background-color: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 16px;
+      transition: opacity 0.2s;
+    }
+
+    .btn-start-camera:hover {
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER TITLE & TOMBOL KEMBALI -->
+  <div class="header-title">
+    <span>Halaman Scan QR</span>
+    <a href="guru-dashboard.html" class="btn-back">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Kembali</span>
+    </a>
+  </div>
+
+  <!-- CONTAINER CARD -->
+  <div class="dashboard-card">
+    
+    <!-- ICON COPY TOP RIGHT -->
+    <div class="card-action-icon" title="Salin Halaman">
+      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
+    </div>
+
+    <hr class="divider" style="margin-top: 0;">
+
+    <!-- 1. JUDUL HALAMAN -->
+    <div class="section-title">SCAN QR CODE</div>
+
+    <!-- 2. KOTAK SCANNER KAMERA -->
+    <div class="scanner-container">
+      <div id="reader"></div>
+      <div class="camera-placeholder" id="cameraPlaceholder">
+        <i data-lucide="qr-code" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
+        <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace;">[ Area Kamera QR ]</span>
+      </div>
+    </div>
+
+    <!-- 3. INSTRUKSI -->
+    <div class="instruction-text">Arahkan kamera ke QR</div>
+
+    <!-- 4. STATUS -->
+    <div class="status-container">
+      <div class="status-label">Status :</div>
+      <div class="status-value" id="statusBadge">
+        <i data-lucide="x-circle" id="statusIcon" style="width: 14px; height: 14px;"></i>
+        <span id="statusText">Belum Scan</span>
+      </div>
+    </div>
+
+    <button class="btn-start-camera" id="btnToggleCamera">
+      <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
+      <span>Buka Kamera</span>
+    </button>
+
+    <hr class="divider">
+
+  </div>
+
+  <script>
+    // Inisialisasi Icon Lucide
+    lucide.createIcons();
+
+    let html5QrcodeScanner = null;
+    let isCameraActive = false;
+
+    const btnToggleCamera = document.getElementById('btnToggleCamera');
+    const cameraPlaceholder = document.getElementById('cameraPlaceholder');
+    const statusBadge = document.getElementById('statusBadge');
+    const statusText = document.getElementById('statusText');
+    const statusIcon = document.getElementById('statusIcon');
+
+    btnToggleCamera.addEventListener('click', () => {
+      if (!isCameraActive) {
+        startScanner();
+      } else {
+        stopScanner();
+      }
+    });
+
+    function startScanner() {
+      cameraPlaceholder.style.display = 'none';
+      
+      html5QrcodeScanner = new Html5Qrcode("reader");
+      
+      html5QrcodeScanner.start(
+        { facingMode: "environment" }, 
+        {
+          fps: 10,
+          qrbox: { width: 220, height: 220 }
+        },
+        (decodedText) => {
+          // Ketika QR Code Berhasil Terbaca
+          onScanSuccess(decodedText);
+        },
+        (errorMessage) => {
+          // Error saat pemindaian berlangsung (bisa diabaikan)
+        }
+      ).then(() => {
+        isCameraActive = true;
+        btnToggleCamera.querySelector('span').textContent = "Tutup Kamera";
+      }).catch(err => {
+        alert("Gagal membuka kamera: " + err);
+        cameraPlaceholder.style.display = 'flex';
+      });
+    }
+
+    function stopScanner() {
+      if (html5QrcodeScanner) {
+        html5QrcodeScanner.stop().then(() => {
+          html5QrcodeScanner.clear();
+          isCameraActive = false;
+          cameraPlaceholder.style.display = 'flex';
+          btnToggleCamera.querySelector('span').textContent = "Buka Kamera";
+        });
+      }
+    }
+
+    function onScanSuccess(decodedText) {
+      // Hentikan kamera setelah berhasil scan
+      stopScanner();
+
+      // Perbarui tampilan Status
+      statusBadge.classList.add('success');
+      statusText.textContent = "Berhasil Scan!";
+      
+      // Ganti icon status
+      statusIcon.setAttribute('data-lucide', 'check-circle');
+      lucide.createIcons();
+
+      alert("QR Code Berhasil Dipindai:\n" + decodedText);
+    }
+  </script>
+
+</body>
+</html>

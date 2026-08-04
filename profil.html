@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profil Guru</title>
+
+  <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --divider-color: #3f3f46;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-cyan: #06b6d4;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* --- PAGE HEADER --- */
+    .header-title {
+      width: 100%;
+      max-width: 440px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--text-white);
+    }
+
+    /* --- MAIN CARD --- */
+    .dashboard-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* ICON COPY TOP RIGHT */
+    .card-action-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .card-action-icon:hover {
+      color: var(--text-white);
+    }
+
+    /* SEPARATOR / DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--divider-color);
+      margin: 18px 0;
+    }
+
+    /* --- JUDUL HALAMAN --- */
+    .section-title {
+      font-size: 15px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-white);
+      letter-spacing: 0.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    /* --- FOTO PROFIL SECTION --- */
+    .profile-photo-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 12px;
+      gap: 12px;
+    }
+
+    .profile-photo-wrapper {
+      position: relative;
+      width: 96px;
+      height: 96px;
+    }
+
+    .profile-photo {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid var(--accent-blue);
+      background-color: #27272a;
+    }
+
+    .btn-edit-photo {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      background-color: var(--accent-blue);
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 28px;
+      height: 28px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    /* --- INFO GROUP --- */
+    .info-group {
+      margin-bottom: 14px;
+    }
+
+    .info-group:last-child {
+      margin-bottom: 0;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-white);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .link-action {
+      color: var(--text-white);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .link-action:hover {
+      color: var(--accent-blue);
+    }
+
+    /* --- BUTTONS --- */
+    .btn-action {
+      width: 100%;
+      background-color: #27272a;
+      color: var(--text-white);
+      border: 1px solid var(--card-border);
+      padding: 12px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 12px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-action:hover {
+      background-color: #3f3f46;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER TITLE & TOMBOL KEMBALI -->
+  <div class="header-title">
+    <span>Profil Guru</span>
+    <a href="guru-dashboard.html" class="btn-back">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Kembali</span>
+    </a>
+  </div>
+
+  <!-- CONTAINER CARD -->
+  <div class="dashboard-card">
+    
+    <!-- ICON COPY TOP RIGHT -->
+    <div class="card-action-icon" title="Salin Halaman">
+      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
+    </div>
+
+    <!-- 1. JUDUL SEKSI & FOTO PROFIL -->
+    <div class="section-title">PROFIL PENDIDIK</div>
+
+    <div class="profile-photo-container">
+      <div class="profile-photo-wrapper">
+        <!-- Gantilah URL gambar di src dengan URL atau file foto Anda -->
+        <img 
+          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" 
+          alt="Foto Profil Guru" 
+          class="profile-photo"
+          id="profileImage"
+        >
+        <button class="btn-edit-photo" title="Ubah Foto" onclick="document.getElementById('fileInput').click()">
+          <i data-lucide="camera" style="width: 14px; height: 14px;"></i>
+        </button>
+        <!-- Input File Tersembunyi -->
+        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+      </div>
+      <div style="font-size: 12px; color: var(--accent-green); font-weight: 600; font-family: 'JetBrains Mono', monospace;">● Status: Aktif</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 2. DATA IDENTITAS -->
+    <div class="info-group">
+      <div class="info-label">Nama Lengkap</div>
+      <div class="info-value">Ahmad Muzammil</div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Jabatan</div>
+      <div class="info-value">Guru Kelas 4A</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 3. DATA KONTAK & SOSIAL MEDIA -->
+    <div class="info-group">
+      <div class="info-label">Nomor HP</div>
+      <div class="info-value">
+        <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+        <span>0812-3456-7890</span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">WhatsApp</div>
+      <div class="info-value">
+        <i data-lucide="message-circle" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
+        <a href="https://wa.me/6281234567890" target="_blank" class="link-action">+62 812-3456-7890</a>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Username Telegram</div>
+      <div class="info-value">
+        <i data-lucide="send" style="width: 16px; height: 16px; color: var(--accent-cyan);"></i>
+        <a href="https://t.me/ahmad_muzammil" target="_blank" class="link-action">@ahmad_muzammil</a>
+      </div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 4. TOMBOL AKSI -->
+    <button class="btn-action" onclick="alert('Fitur Edit Profil dipilih')">
+      <i data-lucide="edit-3" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+      <span>[ Edit Data Profil ]</span>
+    </button>
+
+  </div>
+
+  <script>
+    // Inisialisasi Lucide Icons
+    lucide.createIcons();
+
+    // Fungsi Preview Gambar saat diganti
+    function previewImage(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          document.getElementById('profileImage').src = e.target.result;
+        }
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+
+</body>
+</html>
