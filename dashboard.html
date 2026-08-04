@@ -237,7 +237,7 @@
     <!-- 2. TANGGAL & STATUS -->
     <div class="info-group">
       <div class="info-label">Tanggal</div>
-      <div class="info-value" id="tanggalHariIni">03 Agustus 2026</div>
+      <div class="info-value" id="tanggalHariIni">04 Agustus 2026</div>
     </div>
 
     <div class="info-group">
@@ -253,10 +253,11 @@
     <!-- 3. TOMBOL NAVIGASI / ACTIONS -->
     <div class="button-group">
       
-      <button class="btn-menu" onclick="handleAction('Scan QR')">
+      <!-- TOMBOL ABSEN SELFIE -->
+      <button class="btn-menu" onclick="handleAction('Absen Selfie')">
         <div class="btn-left">
-          <i data-lucide="qr-code" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
-          <span>[ Scan QR ]</span>
+          <i data-lucide="camera" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+          <span>[ Absen Selfie ]</span>
         </div>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
@@ -309,6 +310,7 @@
     // Fungsi Pengarah Navigasi Halaman Real
     function handleAction(actionName) {
       switch (actionName) {
+        case 'Absen Selfie':
         case 'Scan QR':
           window.location.href = "scan.html";
           break;
@@ -319,7 +321,7 @@
           window.location.href = "scan.html?tipe=pulang";
           break;
         case 'Riwayat':
-          window.location.href = "riwayat.html"; // Atau rekap.html
+          window.location.href = "riwayat.html";
           break;
         case 'Profil':
           window.location.href = "profil.html";
