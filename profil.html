@@ -23,7 +23,6 @@
       --divider-color: #3f3f46;
       --accent-blue: #3b82f6;
       --accent-green: #22c55e;
-      --accent-cyan: #06b6d4;
     }
 
     * {
@@ -83,90 +82,50 @@
       position: relative;
     }
 
-    /* ICON COPY TOP RIGHT */
-    .card-action-icon {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-      color: var(--text-muted);
-      cursor: pointer;
-      transition: color 0.2s;
-    }
-
-    .card-action-icon:hover {
-      color: var(--text-white);
-    }
-
-    /* SEPARATOR / DIVIDER */
     .divider {
       border: none;
       border-top: 1px dashed var(--divider-color);
       margin: 18px 0;
     }
 
-    /* --- JUDUL HALAMAN --- */
-    .section-title {
-      font-size: 15px;
-      font-weight: 700;
-      font-family: 'JetBrains Mono', monospace;
-      color: var(--text-white);
-      letter-spacing: 0.5px;
-      text-transform: uppercase;
-      margin-bottom: 16px;
-    }
-
-    /* --- FOTO PROFIL SECTION --- */
-    .profile-photo-container {
+    /* PROFIL FOTO */
+    .profile-avatar-container {
       display: flex;
       flex-direction: column;
       align-items: center;
-      margin-bottom: 12px;
-      gap: 12px;
+      margin-bottom: 16px;
     }
 
-    .profile-photo-wrapper {
+    .avatar-wrapper {
       position: relative;
-      width: 96px;
-      height: 96px;
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid var(--accent-blue);
+      overflow: hidden;
+      margin-bottom: 10px;
     }
 
-    .profile-photo {
+    .avatar-img {
       width: 100%;
       height: 100%;
-      border-radius: 50%;
       object-fit: cover;
-      border: 2px solid var(--accent-blue);
-      background-color: #27272a;
     }
 
-    .btn-edit-photo {
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      background-color: var(--accent-blue);
-      color: white;
-      border: none;
-      border-radius: 50%;
-      width: 28px;
-      height: 28px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    .status-active {
+      font-size: 13px;
+      color: var(--accent-green);
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    /* --- INFO GROUP --- */
+    /* DATA FIELD */
     .info-group {
       margin-bottom: 14px;
     }
 
-    .info-group:last-child {
-      margin-bottom: 0;
-    }
-
     .info-label {
-      font-size: 13px;
+      font-size: 12px;
       color: var(--text-muted);
       margin-bottom: 4px;
     }
@@ -174,25 +133,18 @@
     .info-value {
       font-size: 15px;
       font-weight: 600;
-      font-family: 'JetBrains Mono', monospace;
       color: var(--text-white);
       display: flex;
       align-items: center;
       gap: 8px;
     }
 
-    .link-action {
-      color: var(--text-white);
-      text-decoration: none;
-      transition: color 0.2s;
+    .info-value-mono {
+      font-family: 'JetBrains Mono', monospace;
     }
 
-    .link-action:hover {
-      color: var(--accent-blue);
-    }
-
-    /* --- BUTTONS --- */
-    .btn-action {
+    /* BUTTON EDIT */
+    .btn-edit {
       width: 100%;
       background-color: #27272a;
       color: var(--text-white);
@@ -207,21 +159,97 @@
       align-items: center;
       justify-content: center;
       gap: 8px;
-      margin-top: 12px;
-      transition: all 0.2s ease;
+      transition: all 0.2s;
     }
 
-    .btn-action:hover {
+    .btn-edit:hover {
       background-color: #3f3f46;
+    }
+
+    /* MODAL POPUP EDIT */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.7);
+      align-items: center;
+      justify-content: center;
+      padding: 16px;
+      z-index: 100;
+    }
+
+    .modal-card {
+      width: 100%;
+      max-width: 400px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+    }
+
+    .modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      margin-bottom: 16px;
+    }
+
+    .form-group {
+      margin-bottom: 12px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px;
+      background: #09090b;
+      border: 1px solid var(--card-border);
+      border-radius: 8px;
+      color: white;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .modal-buttons {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .btn-save {
+      flex: 1;
+      background: var(--accent-blue);
+      color: white;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .btn-cancel {
+      flex: 1;
+      background: #27272a;
+      color: var(--text-muted);
+      border: 1px solid var(--card-border);
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
     }
   </style>
 </head>
 <body>
 
-  <!-- HEADER TITLE & TOMBOL KEMBALI -->
+  <!-- HEADER TITLE -->
   <div class="header-title">
     <span>Profil Guru</span>
-    <a href="guru-dashboard.html" class="btn-back">
+    <a href="dashboard.html" class="btn-back">
       <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
       <span>Kembali</span>
     </a>
@@ -230,97 +258,145 @@
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
     
-    <!-- ICON COPY TOP RIGHT -->
-    <div class="card-action-icon" title="Salin Halaman">
-      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
-    </div>
-
-    <!-- 1. JUDUL SEKSI & FOTO PROFIL -->
-    <div class="section-title">PROFIL PENDIDIK</div>
-
-    <div class="profile-photo-container">
-      <div class="profile-photo-wrapper">
-        <!-- Gantilah URL gambar di src dengan URL atau file foto Anda -->
-        <img 
-          src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=256&auto=format&fit=crop" 
-          alt="Foto Profil Guru" 
-          class="profile-photo"
-          id="profileImage"
-        >
-        <button class="btn-edit-photo" title="Ubah Foto" onclick="document.getElementById('fileInput').click()">
-          <i data-lucide="camera" style="width: 14px; height: 14px;"></i>
-        </button>
-        <!-- Input File Tersembunyi -->
-        <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="previewImage(event)">
+    <!-- FOTO PROFIL -->
+    <div class="profile-avatar-container">
+      <div class="avatar-wrapper">
+        <img src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=200" alt="Avatar" class="avatar-img">
       </div>
-      <div style="font-size: 12px; color: var(--accent-green); font-weight: 600; font-family: 'JetBrains Mono', monospace;">● Status: Aktif</div>
+      <div class="status-active">• Status: Aktif</div>
     </div>
 
     <hr class="divider">
 
-    <!-- 2. DATA IDENTITAS -->
+    <!-- DATA PROFIL -->
     <div class="info-group">
       <div class="info-label">Nama Lengkap</div>
-      <div class="info-value">Ahmad Muzammil</div>
+      <div class="info-value" id="dispNama">Ahmad Muzammil</div>
     </div>
 
     <div class="info-group">
       <div class="info-label">Jabatan</div>
-      <div class="info-value">Guru Kelas 4A</div>
+      <div class="info-value" id="dispJabatan">Guru Kelas 4A</div>
     </div>
 
     <hr class="divider">
 
-    <!-- 3. DATA KONTAK & SOSIAL MEDIA -->
     <div class="info-group">
       <div class="info-label">Nomor HP</div>
-      <div class="info-value">
+      <div class="info-value info-value-mono">
         <i data-lucide="phone" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
-        <span>0812-3456-7890</span>
+        <span id="dispNoHP">0812-3456-7890</span>
       </div>
     </div>
 
     <div class="info-group">
       <div class="info-label">WhatsApp</div>
-      <div class="info-value">
+      <div class="info-value info-value-mono">
         <i data-lucide="message-circle" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
-        <a href="https://wa.me/6281234567890" target="_blank" class="link-action">+62 812-3456-7890</a>
+        <span id="dispWA">+62 812-3456-7890</span>
       </div>
     </div>
 
     <div class="info-group">
       <div class="info-label">Username Telegram</div>
-      <div class="info-value">
-        <i data-lucide="send" style="width: 16px; height: 16px; color: var(--accent-cyan);"></i>
-        <a href="https://t.me/ahmad_muzammil" target="_blank" class="link-action">@ahmad_muzammil</a>
+      <div class="info-value info-value-mono">
+        <i data-lucide="send" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
+        <span id="dispTelegram">@ahmad_muzammil</span>
       </div>
     </div>
 
     <hr class="divider">
 
-    <!-- 4. TOMBOL AKSI -->
-    <button class="btn-action" onclick="alert('Fitur Edit Profil dipilih')">
+    <!-- TOMBOL EDIT -->
+    <button class="btn-edit" id="btnBukaModalEdit">
       <i data-lucide="edit-3" style="width: 16px; height: 16px; color: var(--accent-blue);"></i>
       <span>[ Edit Data Profil ]</span>
     </button>
 
   </div>
 
+  <!-- MODAL EDIT PROFIL -->
+  <div class="modal-overlay" id="modalEdit">
+    <div class="modal-card">
+      <div class="modal-title">Edit Profil</div>
+      
+      <div class="form-group">
+        <label>Nomor HP</label>
+        <input type="text" id="inputNoHP">
+      </div>
+
+      <div class="form-group">
+        <label>WhatsApp</label>
+        <input type="text" id="inputWA">
+      </div>
+
+      <div class="form-group">
+        <label>Username Telegram</label>
+        <input type="text" id="inputTelegram">
+      </div>
+
+      <div class="modal-buttons">
+        <button class="btn-cancel" id="btnBatalEdit">Batal</button>
+        <button class="btn-save" id="btnSimpanEdit">Simpan</button>
+      </div>
+    </div>
+  </div>
+
   <script>
-    // Inisialisasi Lucide Icons
     lucide.createIcons();
 
-    // Fungsi Preview Gambar saat diganti
-    function previewImage(event) {
-      const file = event.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-          document.getElementById('profileImage').src = e.target.result;
-        }
-        reader.readAsDataURL(file);
+    document.addEventListener("DOMContentLoaded", function () {
+      // 1. Ambil data login
+      const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+      if (user) {
+        document.getElementById("dispNama").textContent = user.nama || "Ahmad Muzammil";
+        document.getElementById("dispJabatan").textContent = user.jabatan || "Guru Kelas 4A";
       }
-    }
+
+      // 2. Ambil data tambahan dari localStorage (jika sudah pernah diedit)
+      const extraInfo = JSON.parse(localStorage.getItem("userExtraProfil")) || {
+        noHp: "0812-3456-7890",
+        wa: "+62 812-3456-7890",
+        telegram: "@ahmad_muzammil"
+      };
+
+      tampilkanDataExt(extraInfo);
+
+      // 3. Elemen Modal
+      const modal = document.getElementById("modalEdit");
+      const btnBuka = document.getElementById("btnBukaModalEdit");
+      const btnBatal = document.getElementById("btnBatalEdit");
+      const btnSimpan = document.getElementById("btnSimpanEdit");
+
+      btnBuka.addEventListener("click", () => {
+        document.getElementById("inputNoHP").value = extraInfo.noHp;
+        document.getElementById("inputWA").value = extraInfo.wa;
+        document.getElementById("inputTelegram").value = extraInfo.telegram;
+        modal.style.display = "flex";
+      });
+
+      btnBatal.addEventListener("click", () => {
+        modal.style.display = "none";
+      });
+
+      btnSimpan.addEventListener("click", () => {
+        extraInfo.noHp = document.getElementById("inputNoHP").value;
+        extraInfo.wa = document.getElementById("inputWA").value;
+        extraInfo.telegram = document.getElementById("inputTelegram").value;
+
+        localStorage.setItem("userExtraProfil", JSON.stringify(extraInfo));
+        tampilkanDataExt(extraInfo);
+        
+        modal.style.display = "none";
+        alert("Profil berhasil diperbarui!");
+      });
+
+      function tampilkanDataExt(data) {
+        document.getElementById("dispNoHP").textContent = data.noHp;
+        document.getElementById("dispWA").textContent = data.wa;
+        document.getElementById("dispTelegram").textContent = data.telegram;
+      }
+    });
   </script>
 
 </body>
