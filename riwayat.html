@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Riwayat Absensi</title>
+
+  <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --divider-color: #3f3f46;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* --- PAGE HEADER --- */
+    .header-title {
+      width: 100%;
+      max-width: 500px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--text-white);
+    }
+
+    /* --- MAIN CARD --- */
+    .dashboard-card {
+      width: 100%;
+      max-width: 500px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+
+    .user-info {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 16px;
+    }
+
+    .user-info strong {
+      color: var(--accent-blue);
+    }
+
+    /* RIWAYAT LIST */
+    .history-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .history-item {
+      background: #27272a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      padding: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .history-date {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--text-white);
+    }
+
+    .history-time {
+      font-size: 12px;
+      color: var(--text-muted);
+      margin-top: 4px;
+    }
+
+    .badge-status {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: rgba(34, 197, 94, 0.15);
+      color: var(--accent-green);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 30px;
+      color: var(--text-muted);
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER TITLE -->
+  <div class="header-title">
+    <span>Riwayat Absensi</span>
+    <a href="dashboard.html" class="btn-back">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Kembali</span>
+    </a>
+  </div>
+
+  <!-- CONTAINER CARD -->
+  <div class="dashboard-card">
+    <div class="user-info">
+      Menampilkan riwayat untuk: <strong id="namaUser">Guru</strong>
+    </div>
+
+    <!-- LIST RIWAYAT ABSEN -->
+    <div class="history-list" id="historyContainer">
+      <div class="empty-state">
+        <i data-lucide="loader" style="width: 24px; height: 24px; margin-bottom: 8px;"></i>
+        <p>Memuat data riwayat...</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    lucide.createIcons();
+
+    document.addEventListener("DOMContentLoaded", function () {
+      const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      document.getElementById("namaUser").textContent = user.nama || "Guru";
+
+      // URL Web App Google Apps Script Anda
+      const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyYupXclkDnXsUFRP11KN2/JRJrLi8sLaA20X-VF6H9a112H_zFpGR/uD1NAqSkpxwe/exec";
+
+      // Ambil data riwayat
+      fetch(SCRIPT_URL + "?action=getRiwayat&nama=" + encodeURIComponent(user.nama))
+        .then(res => res.json())
+        .then(data => {
+          const container = document.getElementById("historyContainer");
+          container.innerHTML = "";
+
+          if (!data || data.length === 0) {
+            container.innerHTML = `<div class="empty-state">Belum ada riwayat presensi.</div>`;
+            return;
+          }
+
+          data.forEach(item => {
+            const div = document.createElement("div");
+            div.className = "history-item";
+            div.innerHTML = `
+              <div>
+                <div class="history-date">${item.tanggal}</div>
+                <div class="history-time">Masuk: ${item.masuk || '-'} | Pulang: ${item.pulang || '-'}</div>
+              </div>
+              <div class="badge-status">${item.status || 'Hadir'}</div>
+            `;
+            container.appendChild(div);
+          });
+        })
+        .catch(err => {
+          document.getElementById("historyContainer").innerHTML = `
+            <div class="empty-state">
+              <p>Gagal memuat riwayat atau data belum tersedia.</p>
+            </div>`;
+        });
+    });
+  </script>
+</body>
+</html>
