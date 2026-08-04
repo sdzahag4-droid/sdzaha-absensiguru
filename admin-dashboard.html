@@ -109,7 +109,6 @@ hr{
 <hr>
 
 <div class="menu">
-    <a href="#" id="menuDataGuru">📚 Data Guru</a>
     <a href="#" id="menuRekap">📊 Rekap Absensi</a>
     <a href="#" id="menuPengaturan">⚙️ Pengaturan</a>
     <a href="#" id="btnLogout">🚪 Logout</a>
@@ -137,20 +136,15 @@ hr{
     document.getElementById("totalHadir").textContent = "0 Orang";
     document.getElementById("totalBelumHadir").textContent = "41 Orang";
 
-    // 2. Event Klik Menu Navigasi (Diubah langsung berpindah halaman)
-    document.getElementById("menuDataGuru").addEventListener("click", function(e) {
-      e.preventDefault();
-      window.location.href = "data-guru.html"; // Mengarahkan ke halaman Data Guru
-    });
-
+    // 2. Event Klik Menu Navigasi
     document.getElementById("menuRekap").addEventListener("click", function(e) {
       e.preventDefault();
-      window.location.href = "rekap.html"; // Mengarahkan ke halaman Rekap Absensi
+      window.location.href = "rekap.html";
     });
 
     document.getElementById("menuPengaturan").addEventListener("click", function(e) {
       e.preventDefault();
-      window.location.href = "pengaturan.html"; // Mengarahkan ke halaman Pengaturan
+      window.location.href = "pengaturan.html";
     });
 
     // 3. Fungsi Tombol Logout

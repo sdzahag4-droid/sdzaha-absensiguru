@@ -5,14 +5,136 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Data Guru - Admin</title>
     <style>
-        body { background: #000; color: #fff; font-family: Arial, sans-serif; padding: 30px; }
-        a { color: #4da3ff; text-decoration: none; font-size: 16px; }
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .card {
+            width: 100%;
+            max-width: 900px;
+            background: #242424;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(255,255,255,.08);
+            margin-bottom: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background: #1a1a1a;
+            color: #4da3ff;
+            font-size: 16px;
+        }
+        td {
+            font-size: 15px;
+            color: #ddd;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+        .btn-back {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            background: #2563eb;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: background .2s;
+        }
+        .btn-back:hover {
+            background: #1d4ed8;
+        }
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
-    <h1>Manajemen Data Guru</h1>
-    <p>Halaman ini sedang dipersiapkan.</p>
-    <br>
-    <a href="admin-dashboard.html">&larr; Kembali ke Dashboard</a>
+
+<div class="card">
+    <h1>📚 Data Guru</h1>
+    <p style="color: #aaa;">Daftar nama guru dan jabatan di sekolah.</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th style="width: 10%;">No</th>
+                <th style="width: 50%;">Nama Guru</th>
+                <th style="width: 40%;">Jabatan</th>
+            </tr>
+        </thead>
+        <tbody id="tabelGuru">
+            <tr>
+                <td colspan="3" class="loading">Memuat data guru dari database...</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<a href="admin-dashboard.html" class="btn-back">&larr; Kembali ke Dashboard</a>
+
+<script>
+  // URL Web App Google Apps Script Anda
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // Cek keamanan sesi admin
+    const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+    if (!user || user.role !== "admin") {
+      alert("Akses ditolak! Silakan login sebagai Admin terlebih dahulu.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Ambil data guru dari Google Sheets
+    fetch(`${SCRIPT_URL}?action=getGuru`)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById("tabelGuru");
+        tbody.innerHTML = "";
+
+        if (data.status === "success" && data.guru && data.guru.length > 0) {
+          data.guru.forEach((item, index) => {
+            const tr = document.createElement("tr");
+            tr.innerHTML = `
+              <td>${index + 1}</td>
+              <td>${item.nama || "-"}</td>
+              <td>${item.jabatan || "-"}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        } else {
+          tbody.innerHTML = `<tr><td colspan="3" style="text-align:center; color:#f87171;">Data guru tidak ditemukan.</td></tr>`;
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        document.getElementById("tabelGuru").innerHTML = `<tr><td colspan="3" style="text-align:center; color:#f87171;">Gagal memuat data dari server.</td></tr>`;
+      });
+  });
+</script>
+
 </body>
 </html>
