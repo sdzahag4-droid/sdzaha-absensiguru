@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Halaman Scan QR</title>
+  <title>Halaman Scan QR - Absensi Guru</title>
 
   <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -88,7 +88,6 @@
       position: relative;
     }
 
-    /* ICON COPY / ACTION TOP RIGHT */
     .card-action-icon {
       position: absolute;
       top: 20px;
@@ -102,14 +101,12 @@
       color: var(--text-white);
     }
 
-    /* SEPARATOR / DIVIDER */
     .divider {
       border: none;
       border-top: 1px dashed var(--divider-color);
       margin: 18px 0;
     }
 
-    /* --- JUDUL HALAMAN --- */
     .section-title {
       font-size: 15px;
       font-weight: 700;
@@ -146,7 +143,6 @@
       object-fit: cover;
     }
 
-    /* IMPRESI PLACEHOLDER TAMPILAN KAMERA DUMMY */
     .camera-placeholder {
       display: flex;
       flex-direction: column;
@@ -224,7 +220,7 @@
   <!-- HEADER TITLE & TOMBOL KEMBALI -->
   <div class="header-title">
     <span>Halaman Scan QR</span>
-    <a href="guru-dashboard.html" class="btn-back">
+    <a href="dashboard.html" class="btn-back">
       <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
       <span>Kembali</span>
     </a>
@@ -233,17 +229,15 @@
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
     
-    <!-- ICON COPY TOP RIGHT -->
     <div class="card-action-icon" title="Salin Halaman">
       <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
     </div>
 
     <hr class="divider" style="margin-top: 0;">
 
-    <!-- 1. JUDUL HALAMAN -->
     <div class="section-title">SCAN QR CODE</div>
 
-    <!-- 2. KOTAK SCANNER KAMERA -->
+    <!-- KOTAK SCANNER KAMERA -->
     <div class="scanner-container">
       <div id="reader"></div>
       <div class="camera-placeholder" id="cameraPlaceholder">
@@ -252,10 +246,9 @@
       </div>
     </div>
 
-    <!-- 3. INSTRUKSI -->
-    <div class="instruction-text">Arahkan kamera ke QR</div>
+    <div class="instruction-text">Arahkan kamera ke QR Code Sekolah</div>
 
-    <!-- 4. STATUS -->
+    <!-- STATUS SCAN -->
     <div class="status-container">
       <div class="status-label">Status :</div>
       <div class="status-value" id="statusBadge">
@@ -273,11 +266,14 @@
 
   </div>
 
+  <!-- MEMANGGIL FILE JAVASCRIPT LOKAL -->
+  <script src="js/gps.js"></script>
+  <script src="js/scan.js"></script>
+
   <script>
     // Inisialisasi Icon Lucide
     lucide.createIcons();
 
-    let html5QrcodeScanner = null;
     let isCameraActive = false;
 
     const btnToggleCamera = document.getElementById('btnToggleCamera');
@@ -288,13 +284,13 @@
 
     btnToggleCamera.addEventListener('click', () => {
       if (!isCameraActive) {
-        startScanner();
+        startScannerUI();
       } else {
-        stopScanner();
+        stopScannerUI();
       }
     });
 
-    function startScanner() {
+    function startScannerUI() {
       cameraPlaceholder.style.display = 'none';
       
       html5QrcodeScanner = new Html5Qrcode("reader");
@@ -307,10 +303,10 @@
         },
         (decodedText) => {
           // Ketika QR Code Berhasil Terbaca
-          onScanSuccess(decodedText);
+          onScanSuccessUI(decodedText);
         },
         (errorMessage) => {
-          // Error saat pemindaian berlangsung (bisa diabaikan)
+          // Error pemindaian berkala (diabaikan)
         }
       ).then(() => {
         isCameraActive = true;
@@ -321,7 +317,7 @@
       });
     }
 
-    function stopScanner() {
+    function stopScannerUI() {
       if (html5QrcodeScanner) {
         html5QrcodeScanner.stop().then(() => {
           html5QrcodeScanner.clear();
@@ -332,19 +328,36 @@
       }
     }
 
-    function onScanSuccess(decodedText) {
-      // Hentikan kamera setelah berhasil scan
-      stopScanner();
+    function onScanSuccessUI(decodedText) {
+      stopScannerUI();
 
       // Perbarui tampilan Status
       statusBadge.classList.add('success');
       statusText.textContent = "Berhasil Scan!";
       
-      // Ganti icon status
       statusIcon.setAttribute('data-lucide', 'check-circle');
       lucide.createIcons();
 
-      alert("QR Code Berhasil Dipindai:\n" + decodedText);
+      // Panggil fungsi pengiriman absensi dari js/scan.js
+      if (typeof prosesKirimAbsensi === "function") {
+        const urlParams = new URLSearchParams(window.location.search);
+        const tipeAbsen = urlParams.get("tipe") || "masuk";
+        
+        // Ambil lokasi GPS jika ada
+        if (typeof dapatkanLokasi === "function") {
+          dapatkanLokasi()
+            .then(gpsData => {
+              prosesKirimAbsensi(tipeAbsen, gpsData.keterangan, decodedText);
+            })
+            .catch(() => {
+              prosesKirimAbsensi(tipeAbsen, "GPS Tidak Aktif", decodedText);
+            });
+        } else {
+          prosesKirimAbsensi(tipeAbsen, "-", decodedText);
+        }
+      } else {
+        alert("QR Code Dipindai: " + decodedText);
+      }
     }
   </script>
 
