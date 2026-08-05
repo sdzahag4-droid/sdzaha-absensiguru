@@ -243,7 +243,7 @@
 
     <div class="info-group">
       <div class="info-label">Status</div>
-      <div class="status-badge" id="statusBadge" style="background-color: var(--badge-red-bg); color: var(--badge-red);">
+      <div class="status-badge" id="statusBadge">
         <i data-lucide="clock" id="statusIcon" style="width: 14px; height: 14px;"></i>
         <span id="statusText">Belum Absen</span>
       </div>
@@ -323,7 +323,6 @@
 
     // 2. Pengecekan Status Absen secara Dinamis dari localStorage
     window.addEventListener('DOMContentLoaded', () => {
-      // Mengambil data status absen berdasarkan tanggal dinamis hari ini
       const tahun = sekarang.getFullYear();
       const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
       const hari = String(sekarang.getDate()).padStart(2, '0');
