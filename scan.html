@@ -210,30 +210,6 @@
   <script>
     lucide.createIcons();
   </script>
-// Pengecekan status saat halaman selesai dimuat (DOM fully loaded)
-    window.addEventListener('DOMContentLoaded', () => {
-      // Mengambil data status absen berdasarkan tanggal hari ini (contoh kunci penyimpanan lokal)
-      const statusAbsenHariIni = localStorage.getItem('statusAbsen_2026_08_06'); 
-      
-      const badge = document.getElementById('statusBadge');
-      const text = document.getElementById('statusText');
-      const icon = document.getElementById('statusIcon');
 
-      // Jika guru sudah tercatat absen
-      if (statusAbsenHariIni === 'Hadir' || statusAbsenHariIni === 'Sudah Absen') {
-        // Mengubah warna latar belakang dan teks badge menjadi hijau
-        badge.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
-        badge.style.color = '#22c55e';
-        
-        // Mengubah teks keterangan
-        text.textContent = 'Sudah Absen Masuk';
-        
-        // Mengubah ikon jam menjadi ikon centang (check-circle)
-        icon.setAttribute('data-lucide', 'check-circle');
-        
-        // Memuat ulang ikon Lucide agar ikon centang muncul dengan benar
-        lucide.createIcons();
-      }
-    });
 </body>
 </html>
