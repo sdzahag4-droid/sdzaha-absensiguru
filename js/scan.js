@@ -1,131 +1,94 @@
-document.addEventListener("DOMContentLoaded", function () {
-  // 1. Cek Sesi Login Guru
-  const user = JSON.parse(localStorage.getItem("userLoggedIn"));
-  if (!user) {
-    alert("Sesi login habis, silakan login ulang.");
-    window.location.href = "login.html";
-    return;
-  }
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
-  // 2. Tangkap parameter URL untuk menentukan tipe absen (Masuk / Pulang)
-  const urlParams = new URLSearchParams(window.location.search);
-  const tipeAbsen = urlParams.get("tipe") || "masuk"; // default masuk
-  const titleEl = document.getElementById("titleTipeAbsen");
+const video = document.getElementById('webcam');
+const canvas = document.getElementById('canvas');
+const btnAmbil = document.getElementById('btnAmbilFoto') || document.querySelector('button');
+const statusDiv = document.getElementById('statusScan') || document.getElementById('status');
 
-  if (titleEl) {
-    if (tipeAbsen === "pulang") {
-      titleEl.textContent = "ABSEN SELFIE (PULANG)";
-    } else {
-      titleEl.textContent = "ABSEN SELFIE (MASUK)";
-    }
-  }
-
-  // 3. Elemen DOM Kamera
-  const video = document.getElementById("webcamVideo");
-  const canvas = document.getElementById("photoCanvas");
-  const placeholder = document.getElementById("cameraPlaceholder");
-  
-  const btnBukaKamera = document.getElementById("btnBukaKamera");
-  const btnAmbilFoto = document.getElementById("btnAmbilFoto");
-  const btnKirimAbsen = document.getElementById("btnKirimAbsen");
-  const btnUlangFoto = document.getElementById("btnUlangFoto");
-
-  let streamInstance = null;
-  let capturedDataURL = null;
-
-  // 4. Tombol Buka Kamera
-  btnBukaKamera.addEventListener("click", async function () {
-    try {
-      streamInstance = await navigator.mediaDevices.getUserMedia({
-        video: { facingMode: "user" },
-        audio: false
-      });
-      video.srcObject = streamInstance;
-      video.style.display = "block";
-      placeholder.style.display = "none";
-
-      btnBukaKamera.style.display = "none";
-      btnAmbilFoto.style.display = "flex";
-    } catch (err) {
-      console.error(err);
-      alert("Gagal mengakses kamera depan. Pastikan izin kamera diizinkan oleh browser.");
-    }
+// 1. Membuka Kamera Kamera
+if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+  navigator.mediaDevices.getUserMedia({
+    video: { facingMode: "user" } // Menghadap ke wajah/depan
+  }).then(stream => {
+    if (video) video.srcObject = stream;
+  }).catch(err => {
+    console.warn("Kamera depan gagal, mencoba kamera default:", err);
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(stream => { if (video) video.srcObject = stream; })
+      .catch(() => alert("Kamera tidak dapat diakses. Mohon berikan izin kamera pada browser Anda."));
   });
+}
 
-  // 5. Tombol Ambil Foto
-  btnAmbilFoto.addEventListener("click", function () {
-    canvas.width = video.videoWidth || 640;
-    canvas.height = video.videoHeight || 480;
-    const context = canvas.getContext("2d");
-    
-    // Efek mirror agar hasil foto sesuai dengan tampilan video
-    context.translate(canvas.width, 0);
-    context.scale(-1, 1);
-    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+// 2. Aksi Saat Tombol Absen / Scan Diklik
+if (btnAmbil) {
+  btnAmbil.addEventListener('click', function() {
+    const user = JSON.parse(localStorage.getItem('userLoggedIn'));
 
-    capturedDataURL = canvas.toDataURL("image/jpeg", 0.8);
-
-    // Matikan stream kamera setelah foto diambil
-    if (streamInstance) {
-      streamInstance.getTracks().forEach(track => track.stop());
+    if (!user) {
+      alert("Sesi login berakhir! Silakan login ulang.");
+      window.location.href = "index.html";
+      return;
     }
 
-    video.style.display = "none";
-    canvas.style.display = "block";
+    btnAmbil.disabled = true;
+    if (statusDiv) {
+      statusDiv.innerText = "⏳ Ambil foto & mengirim data absen...";
+      statusDiv.style.color = "#eab308";
+    }
 
-    btnAmbilFoto.style.display = "none";
-    btnKirimAbsen.style.display = "flex";
-    btnUlangFoto.style.display = "flex";
-  });
+    // 3. TANGKAP FOTO DARI WEBCAM KE CANVAS
+    let fotoBase64 = "Selfie App";
+    if (video && canvas) {
+      const context = canvas.getContext('2d');
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      // Ubah gambar menjadi format Base64
+      fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+    }
 
-  // 6. Tombol Foto Ulang
-  btnUlangFoto.addEventListener("click", function () {
-    canvas.style.display = "none";
-    btnKirimAbsen.style.display = "none";
-    btnUlangFoto.style.display = "none";
+    // 4. FORMAT TANGGAL DAN JAM
+    const today = new Date();
+    const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+    const jamFormatted = today.toTimeString().split(' ')[0];
 
-    // Nyalakan kembali kamera
-    btnBukaKamera.click();
-  });
-
-  // 7. Tombol Kirim Absensi ke Google Sheets
-  btnKirimAbsen.addEventListener("click", function () {
-    // URL Web App Google Apps Script Anda yang aktif
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
-
-    const tanggalHariIni = new Date().toLocaleDateString("id-ID");
-    const waktuSekarang = new Date().toLocaleTimeString("id-ID");
-
+    // 5. PAYLOAD KIRIM FOTO BASE64 KE APPS SCRIPT
     const payload = {
-      tanggal: tanggalHariIni,
-      nama: user.nama || "Guru",
-      masuk: tipeAbsen.toLowerCase() === "masuk" ? waktuSekarang : "-",
-      pulang: tipeAbsen.toLowerCase() === "pulang" ? waktuSekarang : "-",
+      tanggal: tglFormatted,
+      nama: user.nama,
+      masuk: jamFormatted,
+      pulang: "-",
       gps: "Terdeteksi",
-      qr: "Selfie App",
-      status: tipeAbsen.toLowerCase() === "masuk" ? "Hadir" : "Pulang"
+      qr: fotoBase64, // Dikirim ke Google Drive via Apps Script
+      status: "Hadir"
     };
 
-    btnKirimAbsen.innerHTML = `<span>Mengirim Data...</span>`;
-    btnKirimAbsen.disabled = true;
-
-    // Menggunakan mode no-cors agar aman dari blokir kebijakan Google Apps Script POST redirect
     fetch(SCRIPT_URL, {
       method: "POST",
-      mode: "no-cors",
-      headers: {
-        "Content-Type": "application/json"
-      },
       body: JSON.stringify(payload)
     })
-    .then(() => {
-      alert("Absensi berhasil dikirim dan tercatat di sistem!");
-      window.location.href = "dashboard.html";
+    .then(res => res.json())
+    .then(res => {
+      if (res.result === "success") {
+        if (statusDiv) {
+          statusDiv.innerText = "✅ Absen Berhasil & Foto Tersimpan di Drive!";
+          statusDiv.style.color = "#22c55e";
+        }
+        setTimeout(() => {
+          window.location.href = "dashboard.html";
+        }, 1500);
+      } else {
+        throw new Error(res.error || "Gagal menyimpan");
+      }
     })
     .catch(err => {
       console.error(err);
-      alert("Absensi berhasil diproses!");
-      window.location.href = "dashboard.html";
+      if (statusDiv) {
+        statusDiv.innerText = "❌ Gagal mengirim data absen!";
+        statusDiv.style.color = "#ef4444";
+      }
+      btnAmbil.disabled = false;
     });
   });
-});
+}

@@ -116,24 +116,23 @@
       position: relative;
     }
 
-    #webcamVideo, #photoCanvas {
+    #webcam {
       width: 100%;
       height: 100%;
       object-fit: cover;
       transform: scaleX(-1); /* Mirror effect kamera depan */
     }
 
-    #photoCanvas {
+    #canvas {
       display: none;
     }
 
-    .camera-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      padding: 30px;
-      color: var(--text-muted);
+    #statusScan {
+      margin-top: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      text-align: center;
+      font-family: 'JetBrains Mono', monospace;
     }
 
     /* BUTTONS */
@@ -160,9 +159,9 @@
       opacity: 0.9;
     }
 
-    .btn-submit {
-      background-color: var(--accent-green);
-      display: none;
+    .btn-action:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -180,39 +179,24 @@
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
 
-    <div class="section-title" id="titleTipeAbsen">ABSEN SELFIE (MASUK)</div>
+    <div class="section-title">ABSEN SELFIE (MASUK)</div>
 
     <!-- AREA KAMERA -->
     <div class="camera-container">
-      <div class="camera-placeholder" id="cameraPlaceholder">
-        <i data-lucide="camera" style="width: 48px; height: 48px; color: var(--text-muted);"></i>
-        <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace;">[ Kamera Belum Aktif ]</span>
-      </div>
-
-      <!-- DIPERBAIKI: Menambahkan atribut muted agar autoplay aman di semua browser HP -->
-      <video id="webcamVideo" autoplay playsinline muted style="display: none;"></video>
-      <canvas id="photoCanvas"></canvas>
+      <!-- Tag Video Kamera (Diubah ID-nya ke 'webcam') -->
+      <video id="webcam" autoplay playsinline muted></video>
+      
+      <!-- Tag Canvas Tersembunyi untuk Menangkap Foto Kamera (ID: 'canvas') -->
+      <canvas id="canvas"></canvas>
     </div>
 
-    <!-- TOMBOL AKSI -->
-    <button class="btn-action" id="btnBukaKamera">
+    <!-- STATUS PROSES -->
+    <div id="statusScan"></div>
+
+    <!-- TOMBOL AKSI (Diubah ID-nya ke 'btnAmbilFoto') -->
+    <button class="btn-action" id="btnAmbilFoto">
       <i data-lucide="camera" style="width: 18px; height: 18px;"></i>
-      <span>Buka Kamera Depan</span>
-    </button>
-
-    <button class="btn-action" id="btnAmbilFoto" style="display: none;">
-      <i data-lucide="aperture" style="width: 18px; height: 18px;"></i>
-      <span>Ambil Foto</span>
-    </button>
-
-    <button class="btn-action btn-submit" id="btnKirimAbsen">
-      <i data-lucide="send" style="width: 18px; height: 18px;"></i>
-      <span>Kirim Absensi Selfie</span>
-    </button>
-
-    <button class="btn-action" id="btnUlangFoto" style="display: none; background-color: #3f3f46;">
-      <i data-lucide="refresh-cw" style="width: 18px; height: 18px;"></i>
-      <span>Foto Ulang</span>
+      <span>Ambil Foto & Absen</span>
     </button>
 
     <hr class="divider">
