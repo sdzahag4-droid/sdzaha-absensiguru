@@ -313,8 +313,8 @@
     // Inisialisasi Lucide Icons
     lucide.createIcons();
 
-    // Otomatis Tampilkan Tanggal Hari Ini Sesuai Perangkat (Format Indonesia)
-    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    // Otomatis Tampilkan Tanggal Hari Ini Sesuai Zona Waktu Indonesia (WIB)
+    const options = { timeZone: 'Asia/Jakarta', day: 'numeric', month: 'long', year: 'numeric' };
     const tanggalFormat = new Date().toLocaleDateString('id-ID', options);
     const elemTanggal = document.getElementById('tanggalHariIni');
     if (elemTanggal) {
@@ -345,6 +345,3 @@
       }
     }
   </script>
-
-</body>
-</html>
