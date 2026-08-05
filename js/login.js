@@ -1,5 +1,5 @@
 // Ganti URL di bawah ini dengan URL Web App Google Apps Script terbaru Anda
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmoRScdr0ehgy_QTanzQrz0zL6U1UzEKCCAQnknxj4Y8K7Z5KZLkFuIJePnqu-DQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
 function loginUser(username, password) {
   // Mengirim permintaan login ke Google Apps Script tanpa spasi
