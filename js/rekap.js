@@ -7,7 +7,8 @@ function muatRekapAdmin() {
     tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #a1a1aa;">Memuat data rekap dari database...</td></tr>`;
   }
 
-  fetch(`${SCRIPT_URL}?action=getRekap`)
+  // Menambahkan timestamp agar browser tidak melakukan caching data lama
+  fetch(`${SCRIPT_URL}?action=getRekap&_=${new Date().getTime()}`)
     .then(res => res.json())
     .then(res => {
       console.log("Response Rekap:", res);
