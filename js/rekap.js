@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxmoRScdr0ehgy_QTanzQrz0zL6U1UzEKCCAQnknxj4Y8K7Z5KZLkFuIJePnqu-DQ/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
 function muatRekapBulanan(bulan) {
   // 1. Ambil data user dari localStorage
@@ -11,25 +11,31 @@ function muatRekapBulanan(bulan) {
     return;
   }
 
-  // 3. Ambil data dari Google Apps Script tanpa spasi di URL
-  fetch(`${SCRIPT_URL}?action=getRekap&bulan=${bulan}&nama=${user.nama}`)
+  const tbody = document.getElementById("tabel-rekap");
+  if (tbody) {
+    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #a1a1aa;">Memuat data absensi...</td></tr>`;
+  }
+
+  // 3. Ambil data dari Google Apps Script (menggunakan encodeURIComponent untuk nama)
+  fetch(`${SCRIPT_URL}?action=getRekap&bulan=${bulan}&nama=${encodeURIComponent(user.nama)}`)
     .then(res => res.json())
     .then(res => {
       console.log("Data Absensi Bulanan:", res.data);
       
-      // 4. Masukkan data ke dalam tabel di HTML (jika elemen tabel ada)
-      const tbody = document.getElementById("tabel-rekap");
+      // 4. Masukkan data ke dalam tabel di HTML
       if (tbody) {
         tbody.innerHTML = ""; // Bersihkan isi tabel lama
         
-        if (res.data && res.data.length > 0) {
-          res.data.forEach((row, index) => {
+        const dataList = res.data || res; // Cadangan jika format langsung array
+
+        if (dataList && dataList.length > 0) {
+          dataList.forEach((row, index) => {
             tbody.innerHTML += `
               <tr>
                 <td>${index + 1}</td>
-                <td>${row.tanggal}</td>
-                <td>${row.jam}</td>
-                <td>${row.status}</td>
+                <td>${row.tanggal || "-"}</td>
+                <td>${row.jam || "-"}</td>
+                <td><span class="badge">${row.status || "-"}</span></td>
               </tr>
             `;
           });
@@ -40,6 +46,9 @@ function muatRekapBulanan(bulan) {
     })
     .catch(error => {
       console.error("Error muat rekap:", error);
+      if (tbody) {
+        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #ef4444;">Gagal memuat data dari server.</td></tr>`;
+      }
     });
 }
 
