@@ -23,6 +23,7 @@
       --divider-color: #3f3f46;
       --accent-blue: #3b82f6;
       --accent-green: #22c55e;
+      --accent-purple: #a855f7;
       --badge-red: #ef4444;
       --badge-red-bg: rgba(239, 68, 68, 0.15);
     }
@@ -215,7 +216,7 @@
   <!-- CONTAINER CARD -->
   <div class="dashboard-card">
     
-    <!-- ICON COPY TOP RIGHT -->
+    <!-- ICON LOGOUT TOP RIGHT -->
     <div class="card-action-icon" title="Logout" onclick="logoutUser()">
       <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
     </div>
@@ -237,7 +238,7 @@
     <!-- 2. TANGGAL & STATUS -->
     <div class="info-group">
       <div class="info-label">Tanggal</div>
-      <div class="info-value" id="tanggalHariIni">04 Agustus 2026</div>
+      <div class="info-value" id="tanggalHariIni">05 Agustus 2026</div>
     </div>
 
     <div class="info-group">
@@ -262,6 +263,7 @@
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
 
+      <!-- TOMBOL ABSEN MASUK -->
       <button class="btn-menu" onclick="handleAction('Absen Masuk')">
         <div class="btn-left">
           <i data-lucide="log-in" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
@@ -270,6 +272,7 @@
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
 
+      <!-- TOMBOL ABSEN PULANG -->
       <button class="btn-menu" onclick="handleAction('Absen Pulang')">
         <div class="btn-left">
           <i data-lucide="log-out" style="width: 16px; height: 16px; color: #f59e0b;"></i>
@@ -278,14 +281,16 @@
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
 
-      <button class="btn-menu" onclick="handleAction('Riwayat')">
+      <!-- TOMBOL IZIN TIDAK MASUK -->
+      <button class="btn-menu" onclick="handleAction('Izin Tidak Masuk')">
         <div class="btn-left">
-          <i data-lucide="history" style="width: 16px; height: 16px;"></i>
-          <span>[ Riwayat ]</span>
+          <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--accent-purple);"></i>
+          <span>[ Izin Tidak Masuk ]</span>
         </div>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
 
+      <!-- TOMBOL PROFIL -->
       <button class="btn-menu" onclick="handleAction('Profil')">
         <div class="btn-left">
           <i data-lucide="user" style="width: 16px; height: 16px;"></i>
@@ -320,8 +325,8 @@
         case 'Absen Pulang':
           window.location.href = "scan.html?tipe=pulang";
           break;
-        case 'Riwayat':
-          window.location.href = "riwayat.html";
+        case 'Izin Tidak Masuk':
+          window.location.href = "izin.html";
           break;
         case 'Profil':
           window.location.href = "profil.html";
