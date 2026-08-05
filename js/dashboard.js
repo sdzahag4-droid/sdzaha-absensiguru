@@ -50,11 +50,12 @@ function bukaRiwayat() { window.location.href = "riwayat.html"; }
 function bukaProfil() { window.location.href = "profil.html"; }
 
 // ==========================================
-// 4. FUNGSI LOGOUT
+// 4. FUNGSI LOGOUT (DIUBAH KE index.html)
 // ==========================================
 function logoutUser() {
   if (confirm("Apakah Anda yakin ingin keluar?")) {
     localStorage.removeItem("userLoggedIn");
-    window.location.href = "login.html";
+    // Diubah dari login.html menjadi index.html
+    window.location.href = "index.html";
   }
 }
