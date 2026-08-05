@@ -1,59 +1,51 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
-function muatRekapBulanan(bulan) {
-  // 1. Ambil data user dari localStorage
-  const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+function muatRekapAdmin() {
+  // Mencari elemen tbody pada tabel rekap admin
+  const tbody = document.getElementById("tabel-rekap") || document.querySelector("tbody");
 
-  // 2. Cek keamanan jika user belum login
-  if (!user) {
-    alert("Anda belum login! Silakan login terlebih dahulu.");
-    window.location.href = "login.html";
-    return;
-  }
-
-  const tbody = document.getElementById("tabel-rekap");
   if (tbody) {
-    tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #a1a1aa;">Memuat data absensi...</td></tr>`;
+    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #a1a1aa;">Memuat rekap bulanan admin...</td></tr>`;
   }
 
-  // 3. Ambil data dari Google Apps Script (menggunakan encodeURIComponent untuk nama)
-  fetch(`${SCRIPT_URL}?action=getRekap&bulan=${bulan}&nama=${encodeURIComponent(user.nama)}`)
+  // Mengambil data rekap keseluruhan dari Google Apps Script
+  fetch(`${SCRIPT_URL}?action=getRekap`)
     .then(res => res.json())
     .then(res => {
-      console.log("Data Absensi Bulanan:", res.data);
+      console.log("Data Rekap Bulanan Admin:", res);
       
-      // 4. Masukkan data ke dalam tabel di HTML
       if (tbody) {
-        tbody.innerHTML = ""; // Bersihkan isi tabel lama
+        tbody.innerHTML = ""; // Bersihkan teks loading
         
-        const dataList = res.data || res; // Cadangan jika format langsung array
+        const dataList = res.data || res;
 
         if (dataList && dataList.length > 0) {
-          dataList.forEach((row, index) => {
+          dataList.forEach((row) => {
             tbody.innerHTML += `
               <tr>
-                <td>${index + 1}</td>
-                <td>${row.tanggal || "-"}</td>
-                <td>${row.jam || "-"}</td>
-                <td><span class="badge">${row.status || "-"}</span></td>
+                <td>${row.bulan || "Agustus 2026"}</td>
+                <td>${row.nama || "-"}</td>
+                <td>${row.hadir || 0}</td>
+                <td>${row.terlambat || 0}</td>
+                <td>${row.izin || 0}</td>
+                <td>${row.tidakMasuk || 0}</td>
               </tr>
             `;
           });
         } else {
-          tbody.innerHTML = `<tr><td colspan="4" style="text-align:center;">Belum ada data absensi untuk bulan ini.</td></tr>`;
+          tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;">Belum ada data rekap absensi.</td></tr>`;
         }
       }
     })
     .catch(error => {
       console.error("Error muat rekap:", error);
       if (tbody) {
-        tbody.innerHTML = `<tr><td colspan="4" style="text-align:center; color: #ef4444;">Gagal memuat data dari server.</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="6" style="text-align:center; color: #ef4444;">Gagal memuat data dari server.</td></tr>`;
       }
     });
 }
 
-// Jalankan otomatis saat halaman selesai dimuat (misal untuk bulan ini)
+// Jalankan otomatis saat halaman rekap.html selesai dimuat
 document.addEventListener("DOMContentLoaded", function () {
-  const bulanSekarang = new Date().toISOString().slice(0, 7); // Format: YYYY-MM
-  muatRekapBulanan(bulanSekarang);
+  muatRekapAdmin();
 });
