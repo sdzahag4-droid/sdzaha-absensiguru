@@ -189,7 +189,8 @@
         <span style="font-size: 12px; font-family: 'JetBrains Mono', monospace;">[ Kamera Belum Aktif ]</span>
       </div>
 
-      <video id="webcamVideo" autoplay playsinline style="display: none;"></video>
+      <!-- DIPERBAIKI: Menambahkan atribut muted agar autoplay aman di semua browser HP -->
+      <video id="webcamVideo" autoplay playsinline muted style="display: none;"></video>
       <canvas id="photoCanvas"></canvas>
     </div>
 
