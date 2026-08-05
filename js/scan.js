@@ -12,10 +12,12 @@ document.addEventListener("DOMContentLoaded", function () {
   const tipeAbsen = urlParams.get("tipe") || "masuk"; // default masuk
   const titleEl = document.getElementById("titleTipeAbsen");
 
-  if (tipeAbsen === "pulang") {
-    titleEl.textContent = "ABSEN SELFIE (PULANG)";
-  } else {
-    titleEl.textContent = "ABSEN SELFIE (MASUK)";
+  if (titleEl) {
+    if (tipeAbsen === "pulang") {
+      titleEl.textContent = "ABSEN SELFIE (PULANG)";
+    } else {
+      titleEl.textContent = "ABSEN SELFIE (MASUK)";
+    }
   }
 
   // 3. Elemen DOM Kamera
@@ -52,8 +54,8 @@ document.addEventListener("DOMContentLoaded", function () {
 
   // 5. Tombol Ambil Foto
   btnAmbilFoto.addEventListener("click", function () {
-    canvas.width = video.videoWidth;
-    canvas.height = video.videoHeight;
+    canvas.width = video.videoWidth || 640;
+    canvas.height = video.videoHeight || 480;
     const context = canvas.getContext("2d");
     
     // Efek mirror agar hasil foto sesuai dengan tampilan video
@@ -86,15 +88,14 @@ document.addEventListener("DOMContentLoaded", function () {
     btnBukaKamera.click();
   });
 
-  // 7. Tombol Kirim Absensi ke Google Sheets (Disesuaikan dengan Code.gs)
+  // 7. Tombol Kirim Absensi ke Google Sheets
   btnKirimAbsen.addEventListener("click", function () {
-    // URL Web App Google Apps Script Anda
+    // URL Web App Google Apps Script Anda yang aktif
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
     const tanggalHariIni = new Date().toLocaleDateString("id-ID");
     const waktuSekarang = new Date().toLocaleTimeString("id-ID");
 
-    // Format payload disesuaikan persis dengan urutan spreadsheet di Code.gs
     const payload = {
       tanggal: tanggalHariIni,
       nama: user.nama || "Guru",
@@ -108,12 +109,16 @@ document.addEventListener("DOMContentLoaded", function () {
     btnKirimAbsen.innerHTML = `<span>Mengirim Data...</span>`;
     btnKirimAbsen.disabled = true;
 
+    // Menggunakan mode no-cors agar aman dari blokir kebijakan Google Apps Script POST redirect
     fetch(SCRIPT_URL, {
       method: "POST",
+      mode: "no-cors",
+      headers: {
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(response => {
+    .then(() => {
       alert("Absensi berhasil dikirim dan tercatat di sistem!");
       window.location.href = "dashboard.html";
     })
