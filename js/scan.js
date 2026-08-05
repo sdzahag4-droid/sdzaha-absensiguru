@@ -5,7 +5,7 @@ const canvas = document.getElementById('canvas');
 const btnAmbil = document.getElementById('btnAmbilFoto') || document.querySelector('button');
 const statusDiv = document.getElementById('statusScan') || document.getElementById('status');
 
-// 1. Membuka Kamera Kamera
+// 1. Membuka Kamera Depan Guru
 if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
   navigator.mediaDevices.getUserMedia({
     video: { facingMode: "user" } // Menghadap ke wajah/depan
@@ -32,20 +32,31 @@ if (btnAmbil) {
 
     btnAmbil.disabled = true;
     if (statusDiv) {
-      statusDiv.innerText = "⏳ Ambil foto & mengirim data absen...";
+      statusDiv.innerText = "⏳ Memproses & mengompresi foto...";
       statusDiv.style.color = "#eab308";
     }
 
-    // 3. TANGKAP FOTO DARI WEBCAM KE CANVAS
+    // 3. TANGKAP, PERKECIL RESOLUSI & KOMPRESI FOTO (MAX LEBAR 480px, KUALITAS 50%)
     let fotoBase64 = "Selfie App";
     if (video && canvas) {
       const context = canvas.getContext('2d');
-      canvas.width = video.videoWidth || 640;
-      canvas.height = video.videoHeight || 480;
+      
+      // Batasi lebar foto maksimal 480px agar payload kecil dan cepat dikirim
+      const maxLebar = 480;
+      const skala = maxLebar / (video.videoWidth || 640);
+      
+      canvas.width = maxLebar;
+      canvas.height = (video.videoHeight || 480) * skala;
+
+      // Gambar ulang foto kamera ke canvas dengan ukuran baru
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      // Ubah gambar menjadi format Base64
-      fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+      // Kompresi kualitas JPEG menjadi 0.5 (ukuran file di bawah 100 KB)
+      fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
+    }
+
+    if (statusDiv) {
+      statusDiv.innerText = "⏳ Mengirim data absen...";
     }
 
     // 4. FORMAT TANGGAL DAN JAM
@@ -53,7 +64,7 @@ if (btnAmbil) {
     const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
     const jamFormatted = today.toTimeString().split(' ')[0];
 
-    // 5. PAYLOAD KIRIM FOTO BASE64 KE APPS SCRIPT
+    // 5. PAYLOAD DENGAN FOTO KOMPRESI
     const payload = {
       tanggal: tglFormatted,
       nama: user.nama,
@@ -64,8 +75,12 @@ if (btnAmbil) {
       status: "Hadir"
     };
 
+    // Menggunakan header text/plain untuk mencegah masalah CORS
     fetch(SCRIPT_URL, {
       method: "POST",
+      headers: {
+        "Content-Type": "text/plain;charset=utf-8"
+      },
       body: JSON.stringify(payload)
     })
     .then(res => res.json())
