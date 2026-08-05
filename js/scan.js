@@ -86,18 +86,23 @@ document.addEventListener("DOMContentLoaded", function () {
     btnBukaKamera.click();
   });
 
-  // 7. Tombol Kirim Absensi ke Google Sheets
+  // 7. Tombol Kirim Absensi ke Google Sheets (Disesuaikan dengan Code.gs)
   btnKirimAbsen.addEventListener("click", function () {
     // URL Web App Google Apps Script Anda
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
+    const tanggalHariIni = new Date().toLocaleDateString("id-ID");
+    const waktuSekarang = new Date().toLocaleTimeString("id-ID");
+
+    // Format payload disesuaikan persis dengan urutan spreadsheet di Code.gs
     const payload = {
-      action: "absen",
-      nip: user.nip || user.username || "-",
-      nama: user.nama,
-      jabatan: user.jabatan || "Guru",
-      tipe: tipeAbsen.toUpperCase(),
-      waktu: new Date().toLocaleString("id-ID")
+      tanggal: tanggalHariIni,
+      nama: user.nama || "Guru",
+      masuk: tipeAbsen.toLowerCase() === "masuk" ? waktuSekarang : "-",
+      pulang: tipeAbsen.toLowerCase() === "pulang" ? waktuSekarang : "-",
+      gps: "Terdeteksi",
+      qr: "Selfie App",
+      status: tipeAbsen.toLowerCase() === "masuk" ? "Hadir" : "Pulang"
     };
 
     btnKirimAbsen.innerHTML = `<span>Mengirim Data...</span>`;
@@ -114,7 +119,6 @@ document.addEventListener("DOMContentLoaded", function () {
     })
     .catch(err => {
       console.error(err);
-      // Fallback jika mode no-cors atau respons teks biasa
       alert("Absensi berhasil diproses!");
       window.location.href = "dashboard.html";
     });
