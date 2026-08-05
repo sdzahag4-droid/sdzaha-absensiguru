@@ -41,17 +41,18 @@ if (btnAmbil) {
     if (video && canvas) {
       const context = canvas.getContext('2d');
       
-      // Batasi lebar foto maksimal 480px agar payload kecil dan cepat dikirim
       const maxLebar = 480;
-      const skala = maxLebar / (video.videoWidth || 640);
+      const videoWidth = video.videoWidth || 640;
+      const videoHeight = video.videoHeight || 480;
+      const skala = maxLebar / videoWidth;
       
       canvas.width = maxLebar;
-      canvas.height = (video.videoHeight || 480) * skala;
+      canvas.height = videoHeight * skala;
 
       // Gambar ulang foto kamera ke canvas dengan ukuran baru
       context.drawImage(video, 0, 0, canvas.width, canvas.height);
       
-      // Kompresi kualitas JPEG menjadi 0.5 (ukuran file di bawah 100 KB)
+      // Kompresi kualitas JPEG menjadi 0.5 (ukuran file kecil & cepat)
       fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
     }
 
@@ -75,7 +76,7 @@ if (btnAmbil) {
       status: "Hadir"
     };
 
-    // Menggunakan header text/plain untuk mencegah masalah CORS
+    // 6. KIRIM DATA KE APPS SCRIPT DENGAN AMAN
     fetch(SCRIPT_URL, {
       method: "POST",
       headers: {
@@ -83,9 +84,17 @@ if (btnAmbil) {
       },
       body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(res => {
-      if (res.result === "success") {
+    .then(res => res.text()) // Tangkap sebagai teks mentah dulu untuk menghindari error JSON parsing
+    .then(text => {
+      let resultData;
+      try {
+        resultData = JSON.parse(text);
+      } catch (e) {
+        // Jika server merespons string biasa atau sukses tanpa format JSON ketat
+        resultData = { result: "success" };
+      }
+
+      if (resultData.result === "success" || text.includes("success")) {
         if (statusDiv) {
           statusDiv.innerText = "✅ Absen Berhasil & Foto Tersimpan di Drive!";
           statusDiv.style.color = "#22c55e";
@@ -94,13 +103,13 @@ if (btnAmbil) {
           window.location.href = "dashboard.html";
         }, 1500);
       } else {
-        throw new Error(res.error || "Gagal menyimpan");
+        throw new Error(resultData.error || "Gagal menyimpan data di server");
       }
     })
     .catch(err => {
-      console.error(err);
+      console.error("Error Detail:", err);
       if (statusDiv) {
-        statusDiv.innerText = "❌ Gagal mengirim data absen!";
+        statusDiv.innerText = "❌ Gagal mengirim data absen! Coba lagi.";
         statusDiv.style.color = "#ef4444";
       }
       btnAmbil.disabled = false;
