@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Izin Tidak Masuk</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --accent-purple: #a855f7;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 20px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+    }
+    .header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+    }
+    .btn-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .camera-box {
+      width: 100%;
+      border-radius: 12px;
+      overflow: hidden;
+      background: #000;
+      border: 1px solid var(--card-border);
+      margin-bottom: 15px;
+    }
+    video { width: 100%; display: block; }
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      background: #27272a;
+      color: #fff;
+      border: 1px solid var(--card-border);
+      margin-top: 6px;
+      font-family: inherit;
+      resize: none;
+    }
+    .btn-submit {
+      width: 100%;
+      background: var(--accent-purple);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      border-radius: 10px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="header">
+      <a href="dashboard.html" class="btn-back">
+        <i data-lucide="arrow-left" style="width: 18px;"></i> Kembali
+      </a>
+      <h3 style="font-size: 16px;">Izin Tidak Masuk</h3>
+    </div>
+
+    <!-- Kamera Belakang Preview -->
+    <div class="camera-box">
+      <video id="webcam" autoplay playsinline></video>
+      <canvas id="canvas" style="display:none;"></canvas>
+    </div>
+
+    <div>
+      <label style="font-size: 13px; color: var(--text-muted);">Alasan / Keterangan Izin:</label>
+      <textarea id="keteranganIzin" rows="3" placeholder="Contoh: Sakit / Ada keperluan keluarga..."></textarea>
+    </div>
+
+    <button id="btnAmbilFoto" class="btn-submit">📷 Ambil Foto & Kirim Izin</button>
+    <div id="statusIzin" style="margin-top: 12px; text-align: center; font-size: 14px;"></div>
+  </div>
+
+  <script src="js/izin.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
+</html>
