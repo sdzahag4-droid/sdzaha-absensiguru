@@ -1,6 +1,7 @@
 const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
 
 const video = document.getElementById('webcam');
+const canvas = document.getElementById('canvas');
 const btnAmbil = document.getElementById('btnAmbilFoto');
 const statusDiv = document.getElementById('statusIzin');
 
@@ -32,20 +33,31 @@ btnAmbil.addEventListener('click', function() {
   }
 
   btnAmbil.disabled = true;
-  statusDiv.innerText = "⏳ Mengirim data izin...";
+  statusDiv.innerText = "⏳ Ambil foto & mengirim data izin...";
   statusDiv.style.color = "#eab308";
 
+  // 1. PROSES TANGKAP FOTO DARI WEBCAM KE CANVAS
+  const context = canvas.getContext('2d');
+  canvas.width = video.videoWidth || 640;
+  canvas.height = video.videoHeight || 480;
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  // 2. UBAH GAMBAR CANVAS MENJADI BASE64
+  const fotoBase64 = canvas.toDataURL('image/jpeg', 0.7);
+
+  // 3. FORMAT TANGGAL DAN JAM
   const today = new Date();
   const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
   const jamFormatted = today.toTimeString().split(' ')[0];
 
+  // 4. BENTUK PAYLOAD (KIRIM fotoBase64 KE KOLOM qr)
   const payload = {
     tanggal: tglFormatted,
     nama: user.nama,
     masuk: jamFormatted,
     pulang: "-",
     gps: "Terdeteksi",
-    qr: "Foto Bukti Izin",
+    qr: fotoBase64, // Memasukkan foto Base64 untuk dikonversi jadi file Google Drive di Apps Script
     status: "Izin (" + alasan + ")"
   };
 
@@ -56,7 +68,7 @@ btnAmbil.addEventListener('click', function() {
   .then(res => res.json())
   .then(res => {
     if (res.result === "success") {
-      statusDiv.innerText = "✅ Absen Izin Berhasil Dikirim!";
+      statusDiv.innerText = "✅ Absen Izin & Foto Berhasil Dikirim!";
       statusDiv.style.color = "#22c55e";
       setTimeout(() => {
         window.location.href = "dashboard.html";
