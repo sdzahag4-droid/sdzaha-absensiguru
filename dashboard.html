@@ -238,7 +238,8 @@
     <!-- 2. TANGGAL & STATUS -->
     <div class="info-group">
       <div class="info-label">Tanggal</div>
-      <div class="info-value" id="tanggalHariIni">05 Agustus 2026</div>
+      <!-- Tanggal otomatis dimuat secara dinamis -->
+      <div class="info-value" id="tanggalHariIni">Memuat tanggal...</div>
     </div>
 
     <div class="info-group">
@@ -311,6 +312,14 @@
   <script>
     // Inisialisasi Lucide Icons
     lucide.createIcons();
+
+    // Otomatis Tampilkan Tanggal Hari Ini Sesuai Perangkat (Format Indonesia)
+    const options = { day: 'numeric', month: 'long', year: 'numeric' };
+    const tanggalFormat = new Date().toLocaleDateString('id-ID', options);
+    const elemTanggal = document.getElementById('tanggalHariIni');
+    if (elemTanggal) {
+      elemTanggal.textContent = tanggalFormat;
+    }
 
     // Fungsi Pengarah Navigasi Halaman Real
     function handleAction(actionName) {
