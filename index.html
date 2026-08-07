@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="id">
-<head>
+<head><!-- Menghubungkan manifest.json -->
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#2563eb">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - Absensi Guru SD Zainul Hasan Genggong</title>
@@ -448,10 +450,20 @@
         });
     });
 
-    function showError(msg) {
-      errorMessage.textContent = msg;
-      errorAlert.style.display = 'flex';
+function showError(msg) {
+        errorMessage.textContent = msg;
+        errorAlert.style.display = 'flex';
     }
-  </script>
+    </script>
+
+    <!-- TAMBAHKAN KODE REGISTRASI SERVICE WORKER DI SINI -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('pwabuilder-sw.js')
+          .then(() => console.log('Service Worker Berhasil Didaftarkan!'))
+          .catch((err) => console.log('Service Worker Gagal:', err));
+      }
+    </script>
+
 </body>
 </html>
