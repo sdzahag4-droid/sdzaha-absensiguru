@@ -27,6 +27,9 @@ function muatRekapAdmin() {
                 <td>${row.terlambat || 0}</td>
                 <td>${row.izin || 0}</td>
                 <td>${row.tidakMasuk || 0}</td>
+                <td>${row.sakit || 0}</td>
+                <td>${row.cuti || 0}</td>
+                <td>${row.izinTerlambat || 0}</td>
               </tr>
             `;
           });
