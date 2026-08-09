@@ -289,12 +289,21 @@
         </div>
         <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
       </button>
-      
+
       <!-- TOMBOL IZIN DATANG TERLAMBAT -->
 <button class="btn-menu" onclick="location.href='izin.html?status=terlambat'">
   <div class="btn-left">
     <i data-lucide="clock" style="width: 16px; height: 16px; color: #f59e0b;"></i>
     <span>[ Izin Datang Terlambat ]</span>
+  </div>
+  <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+</button>
+
+<!-- TOMBOL TERLAMBAT -->
+<button class="btn-menu" onclick="handleAction('Terlambat')">
+  <div class="btn-left">
+    <i data-lucide="clock" style="width: 16px; height: 16px; color: var(--accent-orange);"></i>
+    <span>[ Terlambat ]</span>
   </div>
   <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
 </button>
@@ -351,29 +360,62 @@
       }
     });
 
-    // 3. Fungsi Pengarah Navigasi Halaman
-    function handleAction(actionName) {
-      switch (actionName) {
-        case 'Absen Selfie':
-        case 'Scan QR':
-          window.location.href = "scan.html";
-          break;
-        case 'Absen Masuk':
-          window.location.href = "scan.html?tipe=masuk";
-          break;
-        case 'Absen Pulang':
-          window.location.href = "scan.html?tipe=pulang";
-          break;
-        case 'Izin Tidak Masuk':
-          window.location.href = "izin.html";
-          break;
-        case 'Profil':
-          window.location.href = "profil.html";
-          break;
-        default:
-          console.warn("Aksi tidak dikenal");
-      }
+    // 3. Fungsi Pengarah Navigasi Halaman dengan Batasan Jam Aktif
+function handleAction(actionName) {
+  const now = new Date();
+  const currentMinute = now.getHours() * 60 + now.getMinutes();
+
+  function timeToMin(timeStr) {
+    const p = timeStr.split(":");
+    return parseInt(p[0]) * 60 + parseInt(p[1]);
+  }
+
+  // Definisikan jadwal jam aktif
+  const jadwal = {
+    'Absen Selfie': { start: "05:00", end: "07:20", msg: "Absen Selfie hanya aktif pukul 05:00 - 07:20 WIB." },
+    'Absen Masuk': { start: "05:00", end: "08:30", msg: "Absen Masuk hanya aktif pukul 05:00 - 08:30 WIB." },
+    'Izin Datang Terlambat': { start: "05:00", end: "06:15", msg: "Izin Datang Terlambat hanya aktif pukul 05:00 - 06:15 WIB." },
+    'Terlambat': { start: "07:00", end: "08:00", msg: "Fitur Terlambat hanya aktif pukul 07:00 - 08:00 WIB." }
+  };
+
+  if (jadwal[actionName]) {
+    const j = jadwal[actionName];
+    const start = timeToMin(j.start);
+    const end = timeToMin(j.end);
+
+    if (currentMinute < start || currentMinute > end) {
+      alert(j.msg);
+      return;
     }
+  }
+
+  switch (actionName) {
+    case 'Absen Selfie':
+    case 'Scan QR':
+      window.location.href = "scan.html";
+      break;
+    case 'Absen Masuk':
+      window.location.href = "scan.html?type=masuk";
+      break;
+    case 'Absen Pulang':
+      window.location.href = "scan.html?type=pulang";
+      break;
+    case 'Izin Tidak Masuk':
+      window.location.href = "izin.html";
+      break;
+    case 'Izin Datang Terlambat':
+      window.location.href = "izin.html?status=terlambat";
+      break;
+    case 'Terlambat':
+      window.location.href = "scan.html?mode=terlambat";
+      break;
+    case 'Profil':
+      window.location.href = "profil.html";
+      break;
+    default:
+      console.warn("Aksi tidak dikenal");
+  }
+}
   </script>
 </body>
 </html>
