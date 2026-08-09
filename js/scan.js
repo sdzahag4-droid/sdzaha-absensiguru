@@ -1,4 +1,4 @@
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
 
 const video = document.getElementById('webcam');
 const canvas = document.getElementById('canvas');
@@ -66,15 +66,28 @@ if (btnAmbil) {
     const jamFormatted = today.toTimeString().split(' ')[0];
 
     // 5. PAYLOAD DENGAN FOTO KOMPRESI
-    const payload = {
-      tanggal: tglFormatted,
-      nama: user.nama,
-      masuk: jamFormatted,
-      pulang: "-",
-      gps: "Terdeteksi",
-      qr: fotoBase64, // Dikirim ke Google Drive via Apps Script
-      status: "Hadir"
-    };
+// Cek apakah ini mode izin datang terlambat
+const urlParams = new URLSearchParams(window.location.search);
+const mode = urlParams.get('mode');
+
+let statusAbsen = "Hadir";
+let keteranganQr = fotoBase64; 
+
+if (mode === 'terlambat') {
+  statusAbsen = "Izin (Terlambat)";
+  const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
+  keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
+}
+
+const payload = {
+  tanggal: tglFormatted,
+  nama: user.nama,
+  masuk: jamFormatted,
+  pulang: "-",
+  gps: "Terdeteksi",
+  qr: keteranganQr, 
+  status: statusAbsen 
+};
 
     // 6. KIRIM DATA KE APPS SCRIPT DENGAN AMAN
     fetch(SCRIPT_URL, {
