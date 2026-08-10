@@ -31,7 +31,12 @@ document.addEventListener("DOMContentLoaded", function () {
             .then(data => {
                 // Kondisi jika sudah melakukan absensi (berubah jadi hijau)
                 if (data.sudahAbsen || data.status === "hadir" || data.status === "pulang" || (data.status && data.status.toLowerCase().includes("terlambat"))) {
-                    statusText.innerText = "Sudah Absen";
+            statusText.innerText = "Sudah Absen";
+
+            // Tampilkan waktu jam masuk jika data dari server tersedia
+            if (waktuAbsenEl && data.waktu) {
+                waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
+            }
                     
                     // Ubah ikon menjadi centang hijau (mendukung teks emoji atau mengubah atribut jika pakai elemen gambar/ikon bawaan)
                     if (statusIcon) {
