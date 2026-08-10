@@ -21,7 +21,7 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
 // 2. Aksi Saat Tombol Absen / Scan Diklik
 if (btnAmbil) {
-  btnAmbil.addEventListener('click', function() {
+  btnAmbil.addEventListener('click', async function() {
     const user = JSON.parse(localStorage.getItem('userLoggedIn'));
 
     if (!user) {
@@ -32,78 +32,96 @@ if (btnAmbil) {
 
     btnAmbil.disabled = true;
     if (statusDiv) {
-      statusDiv.innerText = "⏳ Memproses & mengompresi foto...";
+      statusDiv.innerText = "⏳ Mengecek lokasi GPS...";
       statusDiv.style.color = "#eab308";
     }
 
-    // 3. TANGKAP, PERKECIL RESOLUSI & KOMPRESI FOTO (MAX LEBAR 480px, KUALITAS 50%)
-    let fotoBase64 = "Selfie App";
-    if (video && canvas) {
-      const context = canvas.getContext('2d');
-      
-      const maxLebar = 480;
-      const videoWidth = video.videoWidth || 640;
-      const videoHeight = video.videoHeight || 480;
-      const skala = maxLebar / videoWidth;
-      
-      canvas.width = maxLebar;
-      canvas.height = videoHeight * skala;
+    try {
+      // 3. CEK VALIDASI GPS & RADIUS TERLEBIH DAHULU
+      const lokasi = await dapatkanLokasi();
+      const jarak = hitungJarak(lokasi.lat, lokasi.lng, SEKOLAH_LAT, SEKOLAH_LNG);
 
-      // Gambar ulang foto kamera ke canvas dengan ukuran baru
-      context.drawImage(video, 0, 0, canvas.width, canvas.height);
-      
-      // Kompresi kualitas JPEG menjadi 0.5 (ukuran file kecil & cepat)
-      fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
-    }
+      // Logika Penolakan jika di luar radius 10 meter
+      if (jarak > RADIUS_MAKSIMAL_METER) {
+        alert("Absensi Gagal! Anda berada di luar radius 50 meter dari sekolah.");
+        if (statusDiv) {
+          statusDiv.innerText = "❌ Di luar radius 10 meter!";
+          statusDiv.style.color = "#ef4444";
+        }
+        btnAmbil.disabled = false;
+        return; // Menghentikan eksekusi, data tidak terkirim
+      }
 
-    if (statusDiv) {
-      statusDiv.innerText = "⏳ Mengirim data absen...";
-    }
+      if (statusDiv) {
+        statusDiv.innerText = "⏳ Memproses & mengompresi foto...";
+      }
 
-    // 4. FORMAT TANGGAL DAN JAM
-    const today = new Date();
-    const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
-    const jamFormatted = today.toTimeString().split(' ')[0];
+      // 4. TANGKAP, PERKECIL RESOLUSI & KOMPRESI FOTO (MAX LEBAR 480px, KUALITAS 50%)
+      let fotoBase64 = "Selfie App";
+      if (video && canvas) {
+        const context = canvas.getContext('2d');
+        
+        const maxLebar = 480;
+        const videoWidth = video.videoWidth || 640;
+        const videoHeight = video.videoHeight || 480;
+        const skala = maxLebar / videoWidth;
+        
+        canvas.width = maxLebar;
+        canvas.height = videoHeight * skala;
 
-    // 5. PAYLOAD DENGAN FOTO KOMPRESI
-// Cek apakah ini mode izin datang terlambat
-const urlParams = new URLSearchParams(window.location.search);
-const mode = urlParams.get('mode');
+        // Gambar ulang foto kamera ke canvas dengan ukuran baru
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        
+        // Kompresi kualitas JPEG menjadi 0.5 (ukuran file kecil & cepat)
+        fotoBase64 = canvas.toDataURL('image/jpeg', 0.5);
+      }
 
-let statusAbsen = "Hadir";
-let keteranganQr = fotoBase64; 
+      if (statusDiv) {
+        statusDiv.innerText = "⏳ Mengirim data absen...";
+      }
 
-if (mode === 'terlambat') {
-  statusAbsen = "Izin (Terlambat)";
-  const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
-  keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
-}
+      // 5. FORMAT TANGGAL DAN JAM
+      const today = new Date();
+      const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
+      const jamFormatted = today.toTimeString().split(' ')[0];
 
-const payload = {
-  tanggal: tglFormatted,
-  nama: user.nama,
-  masuk: jamFormatted,
-  pulang: "-",
-  gps: "Terdeteksi",
-  qr: keteranganQr, 
-  status: statusAbsen 
-};
+      // 6. PAYLOAD DENGAN FOTO KOMPRESI
+      const urlParams = new URLSearchParams(window.location.search);
+      const mode = urlParams.get('mode');
 
-    // 6. KIRIM DATA KE APPS SCRIPT DENGAN AMAN
-    fetch(SCRIPT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "text/plain;charset=utf-8"
-      },
-      body: JSON.stringify(payload)
-    })
-    .then(res => res.text()) // Tangkap sebagai teks mentah dulu untuk menghindari error JSON parsing
-    .then(text => {
+      let statusAbsen = "Hadir";
+      let keteranganQr = fotoBase64; 
+
+      if (mode === 'terlambat') {
+        statusAbsen = "Izin (Terlambat)";
+        const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
+        keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
+      }
+
+      const payload = {
+        tanggal: tglFormatted,
+        nama: user.nama,
+        masuk: jamFormatted,
+        pulang: "-",
+        gps: `Terdeteksi (${Math.round(jarak)}m)`,
+        qr: keteranganQr, 
+        status: statusAbsen 
+      };
+
+      // 7. KIRIM DATA KE APPS SCRIPT DENGAN AMAN
+      const res = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain;charset=utf-8"
+        },
+        body: JSON.stringify(payload)
+      });
+
+      const text = await res.text();
       let resultData;
       try {
         resultData = JSON.parse(text);
       } catch (e) {
-        // Jika server merespons string biasa atau sukses tanpa format JSON ketat
         resultData = { result: "success" };
       }
 
@@ -118,14 +136,14 @@ const payload = {
       } else {
         throw new Error(resultData.error || "Gagal menyimpan data di server");
       }
-    })
-    .catch(err => {
+
+    } catch (err) {
       console.error("Error Detail:", err);
       if (statusDiv) {
-        statusDiv.innerText = "❌ Gagal mengirim data absen! Coba lagi.";
+        statusDiv.innerText = "❌ " + (err.message || "Gagal mendeteksi GPS / mengirim data!");
         statusDiv.style.color = "#ef4444";
       }
       btnAmbil.disabled = false;
-    });
+    }
   });
 }
