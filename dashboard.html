@@ -241,13 +241,14 @@
       <div class="info-value" id="tanggalHariIni">Memuat tanggal...</div>
     </div>
 
-    <div class="info-group">
-      <div class="info-label">Status</div>
-      <div class="status-badge" id="statusBadge">
-        <i data-lucide="clock" id="statusIcon" style="width: 14px; height: 14px;"></i>
-        <span id="statusText">Belum Absen</span>
-      </div>
-    </div>
+<div class="info-group">
+  <div class="info-label">Status</div>
+  <div class="status-badge" id="statusBadge">
+    <i data-lucide="clock" id="statusIcon" style="width: 14px; height: 14px;"></i>
+    <span id="statusText">Belum Absen</span>
+    <span id="waktuAbsen" style="font-size: 11px; margin-left: 6px; opacity: 0.8;"></span>
+  </div>
+</div>
 
     <hr class="divider">
 
@@ -352,12 +353,18 @@
       const icon = document.getElementById('statusIcon');
 
       if (statusAbsenHariIni === 'Hadir' || statusAbsenHariIni === 'Sudah Absen') {
-        badge.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
-        badge.style.color = '#22c55e';
-        text.textContent = 'Sudah Absen Masuk';
-        icon.setAttribute('data-lucide', 'check-circle');
-        lucide.createIcons();
-      }
+            badge.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+            badge.style.color = '#22c55e';
+            text.textContent = 'Sudah Absen Masuk';
+            icon.setAttribute('data-lucide', 'check-circle');
+            
+            // Tambahkan baris ini untuk menampilkan jam/waktu jika tersimpan di localStorage
+            const waktuMasuk = localStorage.getItem(`waktuAbsen_${tahun}_${bulan}_${hari}`) || "Tepat Waktu";
+            const elWaktu = document.getElementById('waktuAbsen');
+            if (elWaktu) elWaktu.textContent = `(${waktuMasuk})`;
+
+            lucide.createIcons();
+        }
     });
 
     // 3. Fungsi Pengarah Navigasi Halaman dengan Batasan Jam Aktif
