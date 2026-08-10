@@ -41,11 +41,11 @@ if (btnAmbil) {
       const lokasi = await dapatkanLokasi();
       const jarak = hitungJarak(lokasi.lat, lokasi.lng, SEKOLAH_LAT, SEKOLAH_LNG);
 
-      // Logika Penolakan jika di luar radius 10 meter
+      // Logika Penolakan jika di luar radius 50 meter
       if (jarak > RADIUS_MAKSIMAL_METER) {
         alert("Absensi Gagal! Anda berada di luar radius 50 meter dari sekolah.");
         if (statusDiv) {
-          statusDiv.innerText = "❌ Di luar radius 10 meter!";
+          statusDiv.innerText = "❌ Di luar radius 50 meter!";
           statusDiv.style.color = "#ef4444";
         }
         btnAmbil.disabled = false;
