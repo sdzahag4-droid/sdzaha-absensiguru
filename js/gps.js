@@ -2,9 +2,9 @@
 // KOORDINAT LOKASI SEKOLAH (SD Zainul Hasan Genggong)
 // Silakan sesuaikan titik Latitude & Longitude sekolah
 // ==========================================
-const SEKOLAH_LAT = -7.800000;  // Ganti dengan Latitude sekolah Anda
-const SEKOLAH_LNG = 113.300000; // Ganti dengan Longitude sekolah Anda
-const RADIUS_MAKSIMAL_METER = 10; // Jarak maksimal dalam meter (misal: 10 meter)
+const SEKOLAH_LAT = -7.787930;  // Ganti dengan Latitude sekolah Anda
+const SEKOLAH_LNG = 113.375122; // Ganti dengan Longitude sekolah Anda
+const RADIUS_MAKSIMAL_METER = 30; // Jarak maksimal dalam meter (misal: 30 meter)
 
 /**
  * Fungsi untuk menghitung jarak antara 2 koordinat (Haversine Formula)
