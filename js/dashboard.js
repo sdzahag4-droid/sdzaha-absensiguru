@@ -17,6 +17,25 @@ document.addEventListener("DOMContentLoaded", function () {
   if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
 });
 
+// Contoh logika saat status berhasil didapatkan dari server
+const statusText = document.getElementById("statusText");
+const statusContainer = statusText.closest("div") || statusText.parentElement;
+
+if (response.sudahAbsen || statusData === "hadir" || statusData === "pulang" || statusData.includes("terlambat")) {
+    statusText.innerText = "Sudah Absen";
+    
+    // Ubah warna latar belakang dan teks menjadi hijau
+    statusContainer.style.backgroundColor = "rgba(16, 185, 129, 0.2)"; // Hijau transparan elegan
+    statusContainer.style.borderColor = "#10B981"; // Border hijau
+    statusText.style.color = "#10B981"; // Teks hijau
+} else {
+    statusText.innerText = "Belum Absen";
+    
+    // Warna merah untuk belum absen
+    statusContainer.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+    statusContainer.style.borderColor = "#EF4444";
+    statusText.style.color = "#EF4444";
+}
 // ==========================================
 // 3. FUNGSI NAVIGASI / AKSI MENU DASHBOARD
 // ==========================================
