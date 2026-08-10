@@ -17,9 +17,13 @@ document.addEventListener("DOMContentLoaded", function () {
     if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
 
     // 3. Cek Status Absen dari Server (Google Apps Script)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec"; // Ganti dengan URL deployment Google Apps Script Anda
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
     const statusText = document.getElementById("statusText");
     const statusContainer = statusText ? (statusText.closest("div") || statusText.parentElement) : null;
+    
+    // Elemen tambahan untuk ikon dan waktu absen
+    const statusIcon = document.getElementById("statusIcon");
+    const waktuAbsenEl = document.getElementById("waktuAbsen");
 
     if (SCRIPT_URL && statusText && statusContainer) {
         fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
@@ -29,6 +33,20 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (data.sudahAbsen || data.status === "hadir" || data.status === "pulang" || (data.status && data.status.toLowerCase().includes("terlambat"))) {
                     statusText.innerText = "Sudah Absen";
                     
+                    // Ubah ikon menjadi centang hijau (mendukung teks emoji atau mengubah atribut jika pakai elemen gambar/ikon bawaan)
+                    if (statusIcon) {
+                        if (statusIcon.tagName.toLowerCase() === 'i') {
+                            statusIcon.setAttribute('data-lucide', 'check-circle');
+                        } else {
+                            statusIcon.innerText = "✅";
+                        }
+                    }
+                    
+                    // Menampilkan keterangan waktu
+                    if (waktuAbsenEl) {
+                        waktuAbsenEl.innerText = `(${data.waktu || "Tercatat"})`;
+                    }
+                    
                     // Ubah warna latar belakang, border, dan teks menjadi hijau elegan
                     statusContainer.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
                     statusContainer.style.borderColor = "#10B981";
@@ -36,10 +54,29 @@ document.addEventListener("DOMContentLoaded", function () {
                 } else {
                     statusText.innerText = "Belum Absen";
                     
+                    // Ikon jam untuk belum absen
+                    if (statusIcon) {
+                        if (statusIcon.tagName.toLowerCase() === 'i') {
+                            statusIcon.setAttribute('data-lucide', 'clock');
+                        } else {
+                            statusIcon.innerText = "🕒";
+                        }
+                    }
+                    
+                    // Kosongkan waktu jika belum absen
+                    if (waktuAbsenEl) {
+                        waktuAbsenEl.innerText = "";
+                    }
+                    
                     // Warna merah untuk belum absen
                     statusContainer.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
                     statusContainer.style.borderColor = "#EF4444";
                     statusText.style.color = "#EF4444";
+                }
+
+                // Render ulang ikon Lucide jika menggunakan library ikon Lucide pada elemen <i>
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
                 }
             })
             .catch(err => {
