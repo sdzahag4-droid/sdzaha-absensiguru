@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
 
     // 3. Cek Status Absen dari Server (Google Apps Script)
-    const SCRIPT_URL = "URL_WEB_APP_ANDA_DISINI"; // Ganti dengan URL deployment Google Apps Script Anda
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec"; // Ganti dengan URL deployment Google Apps Script Anda
     const statusText = document.getElementById("statusText");
     const statusContainer = statusText ? (statusText.closest("div") || statusText.parentElement) : null;
 
