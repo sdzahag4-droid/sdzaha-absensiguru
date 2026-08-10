@@ -4,7 +4,7 @@
 // ==========================================
 const SEKOLAH_LAT = -7.800000;  // Ganti dengan Latitude sekolah Anda
 const SEKOLAH_LNG = 113.300000; // Ganti dengan Longitude sekolah Anda
-const RADIUS_MAKSIMAL_METER = 100; // Jarak maksimal dalam meter (misal: 100 meter)
+const RADIUS_MAKSIMAL_METER = 10; // Jarak maksimal dalam meter (misal: 10 meter)
 
 /**
  * Fungsi untuk menghitung jarak antara 2 koordinat (Haversine Formula)
