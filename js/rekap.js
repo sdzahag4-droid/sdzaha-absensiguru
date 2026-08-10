@@ -1,4 +1,4 @@
-const SCRIPT_URL = "hhttps://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
 
 function muatRekapAdmin() {
   const tbody = document.getElementById("tabel-rekap") || document.querySelector("tbody");
