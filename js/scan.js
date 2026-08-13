@@ -83,19 +83,23 @@ if (btnAmbil) {
 
       // 6. PAYLOAD DENGAN FOTO KOMPRESI & NAMA LEMBAGA
       const urlParams = new URLSearchParams(window.location.search);
-      const mode = urlParams.get('mode');
+      let mode = urlParams.get('mode');
+
+      // Jika dari URL tidak ada parameter mode, cek apakah judul halaman/localStorage mengandung kata pulang
+      if (!mode && (document.title.toLowerCase().includes('pulang') || localStorage.getItem('activeMode') === 'pulang')) {
+          mode = 'pulang';
+      }
 
       let statusAbsen = "Hadir";
       let keteranganQr = fotoBase64; 
 
       if (mode === 'terlambat') {
-    statusAbsen = "Izin (Terlambat)";
-    const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
-    keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
-} else if (mode === 'pulang') {
-    statusAbsen = "Pulang";
-}
-
+          statusAbsen = "Izin (Terlambat)";
+          const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
+          keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
+      } else if (mode === 'pulang' || window.location.href.includes('pulang')) {
+          statusAbsen = "Pulang";
+      }
       const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
       const payload = {
         tanggal: tglFormatted,
