@@ -109,6 +109,40 @@
     <div id="statusIzin" style="margin-top: 12px; text-align: center; font-size: 14px;"></div>
   </div>
 
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const urlParams = new URLSearchParams(window.location.search);
+  const statusParam = urlParams.get('status');
+
+  // Jika diakses dari tombol terlambat, ubah judul form
+  if (statusParam === 'terlambat') {
+    const judul = document.querySelector('h3');
+    if (judul) judul.innerText = "Form Izin Datang Terlambat";
+  }
+
+  // Saat tombol submit diklik
+  const submitBtn = document.getElementById('btnAmbilFoto');
+  if (submitBtn) {
+    submitBtn.addEventListener('click', function(e) {
+      if (statusParam === 'terlambat') {
+        e.preventDefault();
+        
+        const alasan = document.getElementById('keteranganIzin').value;
+        if (!alasan) {
+          alert("Silakan isi alasan keterlambatan terlebih dahulu!");
+          return;
+        }
+        
+        // Simpan sementara alasan di localStorage
+        localStorage.setItem('tempAlasanTerlambat', alasan);
+        
+        // Lanjut ke halaman scan dengan membawa mode terlambat
+        window.location.href = 'scan.html?mode=terlambat';
+      }
+    });
+  }
+});
+</script>
   <script src="js/izin.js"></script>
   <script>lucide.createIcons();</script>
 </body>
