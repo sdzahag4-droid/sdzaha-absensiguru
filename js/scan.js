@@ -21,22 +21,15 @@ if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
 
 // 2. Aksi Saat Tombol Absen / Scan Diklik
 if (btnAmbil) {
-  btnAmbil.addEventListener('click', async function() {
+
+    btnAmbil.addEventListener('click', async function() {
     const user = JSON.parse(localStorage.getItem('userLoggedIn'));
+    const namaLembaga = "SD ZAINUL HASAN GENGGONG";
 
     if (!user) {
-      alert("Sesi login berakhir! Silakan login ulang.");
-      window.location.href = "index.html";
-      return;
-    }
-
-    // Mendefinisikan namaLembaga dengan aman di dalam fungsi click
-    const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
-
-    btnAmbil.disabled = true;
-    if (statusDiv) {
-      statusDiv.innerText = "⏳ Mengecek lokasi GPS...";
-      statusDiv.style.color = "#eab308";
+        alert("Sesi login berakhir! Silakan login ulang.");
+        window.location.href = "index.html";
+        return;
     }
 
     try {
@@ -101,6 +94,7 @@ if (btnAmbil) {
         keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
       }
 
+      const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
       const payload = {
         tanggal: tglFormatted,
         nama: user.nama,
