@@ -89,10 +89,12 @@ if (btnAmbil) {
       let keteranganQr = fotoBase64; 
 
       if (mode === 'terlambat') {
-        statusAbsen = "Izin (Terlambat)";
-        const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
-        keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
-      }
+    statusAbsen = "Izin (Terlambat)";
+    const alasanUser = localStorage.getItem('tempAlasanTerlambat') || "Datang terlambat";
+    keteranganQr = `Terlambat: ${alasanUser} | Foto: ${fotoBase64}`;
+} else if (mode === 'pulang') {
+    statusAbsen = "Pulang";
+}
 
       const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
       const payload = {
