@@ -25,44 +25,24 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusIcon = document.getElementById("statusIcon");
     const waktuAbsenEl = document.getElementById("waktuAbsen");
 
-if (SCRIPT_URL && statusText && statusContainer) {
-  fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
-    .then(response => response.json())
-    .then(data => {
-      // Pengecekan ketat: hanya anggap "Sudah Absen" jika nilai boolean true atau status eksplisit hadir/pulang
-      const isHadir = data.sudahAbsen === true || 
-                      (data.status && (data.status.toLowerCase() === 'hadir' || data.status.toLowerCase() === 'pulang'));
+    if (SCRIPT_URL && statusText && statusContainer) {
+        fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Pengecekan ketat: hanya anggap "Sudah Absen" jika benar-benar true atau status eksplisit hadir/pulang
+                const isHadir = data.sudahAbsen === true || 
+                                (data.status && (data.status.toLowerCase() === 'hadir' || data.status.toLowerCase() === 'pulang'));
 
-      if (isHadir) {
-        statusText.innerText = "Sudah Absen";
-        
-        // Tampilkan waktu jam masuk jika tersedia
-        if (waktuAbsenEl && data.waktu) {
-          waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
-        }
-
-        // Ubah ikon menjadi centang hijau
-        if (statusIcon) {
-          if (statusIcon.tagName.toLowerCase() === 'i') {
-            statusIcon.setAttribute('data-lucide', 'check-circle');
-          } else {
-            statusIcon.innerText = "✅";
-          }
-        }
-      } else {
-        // Tampilan default jika BELUM absen
-        statusText.innerText = "Belum Absen";
-        if (waktuAbsenEl) waktuAbsenEl.innerText = "";
-      }
-    })
-    .catch(err => console.error("Gagal mengambil status absen:", err));
-}
-            // Tampilkan waktu jam masuk jika data dari server tersedia
-            if (waktuAbsenEl && data.waktu) {
-                waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
-            }
+                if (isHadir) {
+                    // --- KONDISI: SUDAH ABSEN ---
+                    statusText.innerText = "Sudah Absen";
                     
-                    // Ubah ikon menjadi centang hijau (mendukung teks emoji atau mengubah atribut jika pakai elemen gambar/ikon bawaan)
+                    // Tampilkan waktu jam masuk jika tersedia
+                    if (waktuAbsenEl && data.waktu) {
+                        waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
+                    }
+
+                    // Ubah ikon menjadi centang hijau
                     if (statusIcon) {
                         if (statusIcon.tagName.toLowerCase() === 'i') {
                             statusIcon.setAttribute('data-lucide', 'check-circle');
@@ -70,17 +50,13 @@ if (SCRIPT_URL && statusText && statusContainer) {
                             statusIcon.innerText = "✅";
                         }
                     }
-                    
-                    // Menampilkan keterangan waktu
-                    if (waktuAbsenEl) {
-                        waktuAbsenEl.innerText = `(${data.waktu || "Tercatat"})`;
-                    }
-                    
+
                     // Ubah warna latar belakang, border, dan teks menjadi hijau elegan
                     statusContainer.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
                     statusContainer.style.borderColor = "#10B981";
                     statusText.style.color = "#10B981";
                 } else {
+                    // --- KONDISI: BELUM ABSEN ---
                     statusText.innerText = "Belum Absen";
                     
                     // Ikon jam untuk belum absen
