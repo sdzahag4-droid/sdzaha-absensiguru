@@ -25,14 +25,38 @@ document.addEventListener("DOMContentLoaded", function () {
     const statusIcon = document.getElementById("statusIcon");
     const waktuAbsenEl = document.getElementById("waktuAbsen");
 
-    if (SCRIPT_URL && statusText && statusContainer) {
-        fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
-            .then(response => response.json())
-            .then(data => {
-                // Kondisi jika sudah melakukan absensi (berubah jadi hijau)
-                if (data.sudahAbsen || data.status === "hadir" || data.status === "pulang" || (data.status && data.status.toLowerCase().includes("terlambat"))) {
-            statusText.innerText = "Sudah Absen";
+if (SCRIPT_URL && statusText && statusContainer) {
+  fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
+    .then(response => response.json())
+    .then(data => {
+      // Pengecekan ketat: hanya anggap "Sudah Absen" jika nilai boolean true atau status eksplisit hadir/pulang
+      const isHadir = data.sudahAbsen === true || 
+                      (data.status && (data.status.toLowerCase() === 'hadir' || data.status.toLowerCase() === 'pulang'));
 
+      if (isHadir) {
+        statusText.innerText = "Sudah Absen";
+        
+        // Tampilkan waktu jam masuk jika tersedia
+        if (waktuAbsenEl && data.waktu) {
+          waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
+        }
+
+        // Ubah ikon menjadi centang hijau
+        if (statusIcon) {
+          if (statusIcon.tagName.toLowerCase() === 'i') {
+            statusIcon.setAttribute('data-lucide', 'check-circle');
+          } else {
+            statusIcon.innerText = "✅";
+          }
+        }
+      } else {
+        // Tampilan default jika BELUM absen
+        statusText.innerText = "Belum Absen";
+        if (waktuAbsenEl) waktuAbsenEl.innerText = "";
+      }
+    })
+    .catch(err => console.error("Gagal mengambil status absen:", err));
+}
             // Tampilkan waktu jam masuk jika data dari server tersedia
             if (waktuAbsenEl && data.waktu) {
                 waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
