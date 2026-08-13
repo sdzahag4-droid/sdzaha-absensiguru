@@ -1,5 +1,5 @@
 // Ganti URL di bawah ini dengan URL Web App Google Apps Script terbaru Anda
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
 
 // ==========================================
 // 1. LOGIKA LOGIN (GURU & ADMIN)
