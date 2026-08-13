@@ -30,7 +30,7 @@ if (btnAmbil) {
       return;
     }
 
-    // Mendefinisikan namaLembaga dengan aman dari localStorage atau objek user
+    // Mendefinisikan namaLembaga dengan aman di dalam fungsi click
     const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
 
     btnAmbil.disabled = true;
@@ -104,7 +104,7 @@ if (btnAmbil) {
       const payload = {
         tanggal: tglFormatted,
         nama: user.nama,
-        lembaga: namaLembaga, // Variabel namaLembaga kini sudah aman digunakan
+        lembaga: namaLembaga,
         masuk: jamFormatted,
         pulang: "-",
         gps: `Terdeteksi (${Math.round(jarak)}m)`,
