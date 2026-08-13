@@ -30,6 +30,9 @@ if (btnAmbil) {
       return;
     }
 
+    // Mendefinisikan namaLembaga dengan aman dari localStorage atau objek user
+    const namaLembaga = user.lembaga || localStorage.getItem('namaLembaga') || "SD Zainul Hasan Genggong";
+
     btnAmbil.disabled = true;
     if (statusDiv) {
       statusDiv.innerText = "⏳ Mengecek lokasi GPS...";
@@ -85,7 +88,7 @@ if (btnAmbil) {
       const tglFormatted = `${today.getDate()}/${today.getMonth() + 1}/${today.getFullYear()}`;
       const jamFormatted = today.toTimeString().split(' ')[0];
 
-      // 6. PAYLOAD DENGAN FOTO KOMPRESI
+      // 6. PAYLOAD DENGAN FOTO KOMPRESI & NAMA LEMBAGA
       const urlParams = new URLSearchParams(window.location.search);
       const mode = urlParams.get('mode');
 
@@ -101,6 +104,7 @@ if (btnAmbil) {
       const payload = {
         tanggal: tglFormatted,
         nama: user.nama,
+        lembaga: namaLembaga, // Variabel namaLembaga kini sudah aman digunakan
         masuk: jamFormatted,
         pulang: "-",
         gps: `Terdeteksi (${Math.round(jarak)}m)`,
