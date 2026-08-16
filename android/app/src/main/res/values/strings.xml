@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Absensi Guru</string>
+    <string name="title_activity_main">Absensi Guru</string>
+    <string name="package_name">com.sdzaha.absensi</string>
+    <string name="custom_url_scheme">com.sdzaha.absensi</string>
+</resources>
