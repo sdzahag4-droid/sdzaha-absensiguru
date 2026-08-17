@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard Guru</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --divider-color: #3f3f46;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+      --accent-purple: #a855f7;
+      --badge-red: #ef4444;
+      --badge-red-bg: rgba(239, 68, 68, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* --- PAGE HEADER --- */
+    .header-title {
+      width: 100%;
+      max-width: 440px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+    }
+
+    /* --- MAIN CARD --- */
+    .dashboard-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* ICON COPY / ACTION TOP RIGHT */
+    .card-action-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .card-action-icon:hover {
+      color: var(--text-white);
+    }
+
+    /* SEPARATOR / DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--divider-color);
+      margin: 18px 0;
+    }
+
+    /* --- SECTION 1: PROFIL & LOGO --- */
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .logo-box {
+      width: 44px;
+      height: 44px;
+      background: #27272a;
+      border: 1px solid var(--card-border);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--accent-blue);
+    }
+
+    .logo-text {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    .welcome-text {
+      font-size: 14px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .user-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-white);
+      margin-bottom: 2px;
+    }
+
+    .user-role {
+      font-size: 14px;
+      color: var(--accent-blue);
+      font-weight: 600;
+    }
+
+    /* --- SECTION 2: TANGGAL & STATUS --- */
+    .info-group {
+      margin-bottom: 14px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-white);
+    }
+
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--badge-red-bg);
+      color: var(--badge-red);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* --- SECTION 3: MENU TOMBOL --- */
+    .button-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .btn-menu {
+      width: 100%;
+      background-color: #27272a;
+      color: var(--text-white);
+      border: 1px solid var(--card-border);
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s ease;
+    }
+
+    .btn-menu:hover {
+      background-color: #3f3f46;
+      border-color: #52525b;
+      transform: translateY(-1px);
+    }
+
+    .btn-menu:active {
+      transform: translateY(0);
+    }
+
+    .btn-left {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TITLE -->
+  <h1 class="header-title">Dashboard Guru</h1>
+
+  <!-- CONTAINER CARD -->
+  <div class="dashboard-card">
+    
+    <!-- ICON LOGOUT TOP RIGHT -->
+    <div class="card-action-icon" title="Logout" onclick="logoutUser()">
+      <i data-lucide="log-out" style="width: 18px; height: 18px;"></i>
+    </div>
+
+    <!-- 1. HEADER LOGO & PROFIL -->
+    <div class="logo-container">
+      <div class="logo-box">
+        <i data-lucide="graduation-cap" style="width: 24px; height: 24px;"></i>
+      </div>
+      <span class="logo-text">SD ZAINUL HASAN</span>
+    </div>
+
+    <div class="welcome-text">Selamat Datang</div>
+    <div class="user-name" id="namaUser">Guru</div>
+    <div class="user-role" id="jabatanUser">-</div>
+
+    <hr class="divider">
+
+    <!-- 2. TANGGAL & STATUS -->
+    <div class="info-group">
+      <div class="info-label">Tanggal</div>
+      <div class="info-value" id="tanggalHariIni">Memuat tanggal...</div>
+    </div>
+
+<div class="info-group">
+  <div class="info-label">Status</div>
+  <div class="status-badge" id="statusBadge">
+    <i data-lucide="clock" id="statusIcon" style="width: 14px; height: 14px;"></i>
+    <span id="statusText">Belum Absen</span>
+    <span id="waktuAbsen" style="font-size: 11px; margin-left: 6px; opacity: 0.8;"></span>
+  </div>
+</div>
+
+    <hr class="divider">
+
+    <!-- 3. TOMBOL NAVIGASI / ACTIONS -->
+    <div class="button-group">
+
+      <!-- TOMBOL ABSEN MASUK -->
+      <button class="btn-menu" onclick="handleAction('Absen Masuk')">
+        <div class="btn-left">
+          <i data-lucide="log-in" style="width: 16px; height: 16px; color: var(--accent-green);"></i>
+          <span>[ Absen Masuk ]</span>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </button>
+
+      <!-- TOMBOL ABSEN PULANG -->
+      <button class="btn-menu" onclick="handleAction('Absen Pulang')">
+        <div class="btn-left">
+          <i data-lucide="log-out" style="width: 16px; height: 16px; color: #f59e0b;"></i>
+          <span>[ Absen Pulang ]</span>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </button>
+
+      <!-- TOMBOL IZIN TIDAK MASUK -->
+      <button class="btn-menu" onclick="handleAction('Izin Tidak Masuk')">
+        <div class="btn-left">
+          <i data-lucide="file-text" style="width: 16px; height: 16px; color: var(--accent-purple);"></i>
+          <span>[ Izin Tidak Masuk ]</span>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </button>
+
+      <!-- TOMBOL IZIN DATANG TERLAMBAT -->
+<button class="btn-menu" onclick="location.href='izin.html?status=terlambat'">
+  <div class="btn-left">
+    <i data-lucide="clock" style="width: 16px; height: 16px; color: #f59e0b;"></i>
+    <span>[ Izin Datang Terlambat ]</span>
+  </div>
+  <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+</button>
+
+<!-- TOMBOL TERLAMBAT -->
+<button class="btn-menu" onclick="handleAction('Terlambat')">
+  <div class="btn-left">
+    <i data-lucide="clock" style="width: 16px; height: 16px; color: var(--accent-orange);"></i>
+    <span>[ Terlambat ]</span>
+  </div>
+  <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+</button>
+
+      <!-- TOMBOL PROFIL -->
+      <button class="btn-menu" onclick="handleAction('Profil')">
+        <div class="btn-left">
+          <i data-lucide="user" style="width: 16px; height: 16px;"></i>
+          <span>[ Profil ]</span>
+        </div>
+        <i data-lucide="chevron-right" style="width: 16px; height: 16px; color: var(--text-muted);"></i>
+      </button>
+
+    </div>
+
+    <hr class="divider">
+
+  </div>
+
+  <!-- MEMANGGIL FILE JS DASHBOARD -->
+  <script src="js/dashboard.js"></script>
+
+  <script>
+    // Inisialisasi Lucide Icons
+    lucide.createIcons();
+
+    // 1. Otomatis Tampilkan Tanggal Hari Ini Sesuai Waktu Lokal Perangkat
+    const sekarang = new Date();
+    const opsiTanggal = { day: 'numeric', month: 'long', year: 'numeric' };
+    const tanggalFormat = sekarang.toLocaleDateString('id-ID', opsiTanggal);
+    const elemTanggal = document.getElementById('tanggalHariIni');
+    if (elemTanggal) {
+      elemTanggal.textContent = tanggalFormat;
+    }
+
+    // 2. Pengecekan Status Absen secara Dinamis dari localStorage
+    window.addEventListener('DOMContentLoaded', () => {
+      const tahun = sekarang.getFullYear();
+      const bulan = String(sekarang.getMonth() + 1).padStart(2, '0');
+      const hari = String(sekarang.getDate()).padStart(2, '0');
+      const kunciAbsen = `statusAbsen_${tahun}_${bulan}_${hari}`;
+
+      const statusAbsenHariIni = localStorage.getItem(kunciAbsen) || localStorage.getItem('statusAbsen_2026_08_06'); 
+      const badge = document.getElementById('statusBadge');
+      const text = document.getElementById('statusText');
+      const icon = document.getElementById('statusIcon');
+
+      if (statusAbsenHariIni === 'Hadir' || statusAbsenHariIni === 'Sudah Absen') {
+            badge.style.backgroundColor = 'rgba(34, 197, 94, 0.15)';
+            badge.style.color = '#22c55e';
+            text.textContent = 'Sudah Absen Masuk';
+            icon.setAttribute('data-lucide', 'check-circle');
+            
+            // Tambahkan baris ini untuk menampilkan jam/waktu jika tersimpan di localStorage
+            const waktuMasuk = localStorage.getItem(`waktuAbsen_${tahun}_${bulan}_${hari}`) || "Tepat Waktu";
+            const elWaktu = document.getElementById('waktuAbsen');
+            if (elWaktu) elWaktu.textContent = `(${waktuMasuk})`;
+
+            lucide.createIcons();
+        }
+    });
+
+    // 3. Fungsi Pengarah Navigasi Halaman dengan Batasan Jam Aktif
+function handleAction(actionName) {
+  const now = new Date();
+  const currentMinute = now.getHours() * 60 + now.getMinutes();
+
+  function timeToMin(timeStr) {
+    const p = timeStr.split(":");
+    return parseInt(p[0]) * 60 + parseInt(p[1]);
+  }
+
+  // Definisikan jadwal jam aktif
+  const jadwal = {
+    'Izin Tidak Masuk': { start: "05:00", end: "07:15", msg: "Fitur Izin Tidak Masuk hanya aktif pukul 05:00 - 07:15 WIB" },
+    'Absen Masuk': { start: "06:00", end: "07:30", msg: "Absen Masuk hanya aktif pukul 06:00 - 07:30 WIB." },
+    'Izin Datang Terlambat': { start: "05:00", end: "06:30", msg: "Izin Datang Terlambat hanya aktif pukul 05:00 - 06:30 WIB." },
+    'Terlambat': { start: "07:00", end: "08:00", msg: "Fitur Terlambat hanya aktif pukul 07:00 - 08:00 WIB." },
+    'Absen Pulang': { start: "10:00", end: "16:00", msg: "Absen Pulang hanya aktif pukul 10:00 - 16:00 WIB." }
+  };
+
+  if (jadwal[actionName]) {
+    const j = jadwal[actionName];
+    const start = timeToMin(j.start);
+    const end = timeToMin(j.end);
+
+    if (currentMinute < start || currentMinute > end) {
+      alert(j.msg);
+      return;
+    }
+  }
+
+  switch (actionName) {
+    case 'Scan QR':
+      window.location.href = "scan.html";
+      break;
+    case 'Absen Masuk':
+      window.location.href = "scan.html?type=masuk";
+      break;
+    case 'Absen Pulang':
+      window.location.href = "scan.html?type=pulang";
+      break;
+    case 'Izin Tidak Masuk':
+      window.location.href = "izin.html";
+      break;
+    case 'Izin Datang Terlambat':
+      window.location.href = "izin.html?status=terlambat";
+      break;
+    case 'Terlambat':
+      window.location.href = "scan.html?mode=terlambat";
+      break;
+    case 'Profil':
+      window.location.href = "profil.html";
+      break;
+    default:
+      console.warn("Aksi tidak dikenal");
+  }
+}
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekap Bulanan - Admin</title>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+        body {
+            background: #000;
+            color: #fff;
+            padding: 30px;
+        }
+        h1 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+        .container {
+            width: 100%;
+            max-width: 1000px;
+            background: #242424;
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 0 15px rgba(255,255,255,.08);
+            margin-bottom: 20px;
+        }
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        .btn {
+            display: inline-block;
+            text-decoration: none;
+            color: #fff;
+            padding: 10px 18px;
+            border-radius: 8px;
+            font-weight: bold;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background .2s;
+        }
+        .btn-back {
+            background: #4b5563;
+        }
+        .btn-back:hover {
+            background: #374151;
+        }
+        .btn-pdf {
+            background: #dc2626;
+        }
+        .btn-pdf:hover {
+            background: #b91c1c;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #444;
+        }
+        th {
+            background: #1a1a1a;
+            color: #4da3ff;
+            font-size: 15px;
+        }
+        td {
+            font-size: 14px;
+            color: #ddd;
+        }
+        tr:hover {
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        /* Pengaturan khusus saat dicetak / export ke PDF */
+        @media print {
+            body {
+                background: #fff;
+                color: #000;
+                padding: 0;
+            }
+            .container {
+                background: #fff;
+                box-shadow: none;
+                padding: 0;
+            }
+            th {
+                background: #eee !important;
+                color: #000 !important;
+                border-bottom: 2px solid #000;
+            }
+            td {
+                color: #000;
+                border-bottom: 1px solid #ccc;
+            }
+            .action-buttons {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="rekapContainer">
+    <h1>Rekap Bulanan</h1>
+
+    <!-- Tombol Navigasi & Aksi -->
+    <div class="action-buttons">
+        <a href="admin-dashboard.html" class="btn btn-back">&larr; Kembali</a>
+        <button id="btnExportPDF" class="btn btn-pdf">📥 Export ke PDF</button>
+    </div>
+
+    <table>
+       <table>
+        <thead>
+            <tr>
+                <th>Bulan</th>
+                <th>Nama</th>
+                <th>Hadir</th>
+                <th>Terlambat</th>
+                <th>Izin</th>
+                <th>Tidak Masuk</th>
+                <th>Sakit</th>
+                <th>Cuti</th>
+                <th>Izin Terlambat</th>
+            </tr>
+        </thead>
+        <tbody id="tabel-rekap">
+            <!-- Isi tabel akan otomatis diisi oleh js/rekap.js -->
+            <tr>
+                <td colspan="9" style="text-align:center; color: #a1a1aa;">Memuat data rekap dari database...</td>
+            </tr>
+        </tbody>
+    </table>
+    </table>
+</div>
+
+<!-- MEMANGGIL SKRIP UNTUK MENARIK DATA REKAP DARI GOOGLE SHEETS -->
+<script src="js/rekap.js"></script>
+
+<script>
+    // Fungsi tombol Export ke PDF
+    document.getElementById("btnExportPDF").addEventListener("click", function() {
+        window.print();
+    });
+</script>
+
+</body>
+</html>

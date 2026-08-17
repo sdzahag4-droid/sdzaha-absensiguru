@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard Admin</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial, Helvetica, sans-serif;
+}
+
+body{
+    background:#000;
+    color:#fff;
+    padding:20px;
+}
+
+h1{
+    font-size:42px;
+    margin-bottom:20px;
+}
+
+.card{
+    width:100%;
+    max-width:1200px;
+    background:#242424;
+    border-radius:28px;
+    padding:30px;
+    position:relative;
+    box-shadow:0 0 15px rgba(255,255,255,.08);
+}
+
+.copy{
+    position:absolute;
+    top:20px;
+    right:20px;
+    font-size:24px;
+    cursor:pointer;
+}
+
+.item{
+    margin-bottom:28px;
+}
+
+.label{
+    font-size:18px;
+    font-weight:bold;
+    margin-bottom:10px;
+}
+
+.value{
+    font-size:30px;
+    color:#fff;
+}
+
+hr{
+    border:none;
+    border-top:1px dashed #888;
+    margin:30px 0;
+}
+
+.menu{
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+}
+
+.menu a{
+    text-decoration:none;
+    color:white;
+    font-size:18px;
+    transition:.3s;
+}
+
+.menu a:hover{
+    color:#4da3ff;
+    padding-left:10px;
+}
+</style>
+
+</head>
+<body>
+
+<h1 id="welcomeAdmin">Dashboard Admin</h1>
+
+<div class="card">
+
+<div class="copy" title="Salin Info Sesi">📋</div>
+
+<div class="item">
+    <div class="label">Total Guru & Staff</div>
+    <div class="value" id="totalGuru">Memuat...</div>
+</div>
+
+<div class="item">
+    <div class="label">Hadir Hari Ini</div>
+    <div class="value" id="totalHadir" style="color: #4ade80;">Memuat...</div>
+</div>
+
+<div class="item">
+    <div class="label">Belum Hadir</div>
+    <div class="value" id="totalBelumHadir" style="color: #f87171;">Memuat...</div>
+</div>
+
+<hr>
+
+<div class="menu">
+    <a href="#" id="menuRekap">📊 Rekap Absensi</a>
+    <a href="#" id="btnLogout">🚪 Logout</a>
+</div>
+
+</div>
+
+<!-- Skrip Logika Dashboard Admin Integrasi Apps Script -->
+<script>
+  const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyIreRt889UFmfNFBksAaj4Gq_WmUIsqaUpV6XeIvU-KGkKbJwfqaC13ZWV7mhiRiuG/exec";
+
+  document.addEventListener("DOMContentLoaded", function () {
+    // 1. Cek Keamanan Sesi Login Admin
+    const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+
+    if (!user || user.role !== "admin") {
+      alert("Akses ditolak! Silakan login sebagai Admin terlebih dahulu.");
+      window.location.href = "index.html";
+      return;
+    }
+
+    // Tampilkan nama admin pada judul
+    document.getElementById("welcomeAdmin").textContent = "Halo, " + (user.nama || "ADMIN");
+
+    // 2. Panggil Data Statistik Real-time dari Google Sheets via Apps Script
+    muatDataDashboard();
+
+    // 3. Event Klik Menu Navigasi
+    document.getElementById("menuRekap").addEventListener("click", function(e) {
+      e.preventDefault();
+      window.location.href = "rekap.html";
+    });
+
+    // 4. Fungsi Tombol Logout
+    const btnLogout = document.getElementById("btnLogout");
+    btnLogout.addEventListener("click", function (e) {
+      e.preventDefault();
+      if (confirm("Apakah Anda yakin ingin keluar dari akun Admin?")) {
+        localStorage.removeItem("userLoggedIn");
+        window.location.href = "index.html";
+      }
+    });
+  });
+
+  // Fungsi khusus mengambil angka statistik real-time
+  function muatDataDashboard() {
+    fetch(SCRIPT_URL + "?action=getDashboardAdmin")
+      .then(res => res.json())
+      .then(data => {
+        if (data) {
+          document.getElementById("totalGuru").textContent = (data.totalGuru || 0) + " Orang";
+          document.getElementById("totalHadir").textContent = (data.hadirHariIni || 0) + " Orang";
+          document.getElementById("totalBelumHadir").textContent = (data.belumHadir || 0) + " Orang";
+        }
+      })
+      .catch(err => {
+        console.error("Gagal memuat data dashboard:", err);
+        document.getElementById("totalGuru").textContent = "-";
+        document.getElementById("totalHadir").textContent = "-";
+        document.getElementById("totalBelumHadir").textContent = "-";
+      });
+  }
+</script>
+
+</body>
+</html>

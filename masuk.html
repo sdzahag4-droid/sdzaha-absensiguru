@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Halaman Absen Masuk</title>
+
+  <!-- Google Fonts: JetBrains Mono & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    :root {
+      --bg-dark: #09090b;
+      --card-bg: #18181b;
+      --card-border: #27272a;
+      --text-white: #f4f4f5;
+      --text-muted: #a1a1aa;
+      --divider-color: #3f3f46;
+      --accent-blue: #3b82f6;
+      --accent-green: #22c55e;
+      --badge-green-bg: rgba(34, 197, 94, 0.15);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-white);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 32px 16px;
+    }
+
+    /* --- PAGE HEADER --- */
+    .header-title {
+      width: 100%;
+      max-width: 440px;
+      font-size: 24px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      color: var(--text-white);
+      letter-spacing: -0.5px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .btn-back {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 14px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--text-white);
+    }
+
+    /* --- MAIN CARD --- */
+    .dashboard-card {
+      width: 100%;
+      max-width: 440px;
+      background-color: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+      position: relative;
+    }
+
+    /* ICON COPY TOP RIGHT */
+    .card-action-icon {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: color 0.2s;
+    }
+
+    .card-action-icon:hover {
+      color: var(--text-white);
+    }
+
+    /* SEPARATOR / DIVIDER */
+    .divider {
+      border: none;
+      border-top: 1px dashed var(--divider-color);
+      margin: 18px 0;
+    }
+
+    /* --- INFO GROUPS --- */
+    .info-group {
+      margin-bottom: 16px;
+    }
+
+    .info-label {
+      font-size: 13px;
+      color: var(--text-muted);
+      margin-bottom: 4px;
+    }
+
+    .info-value {
+      font-size: 15px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text-white);
+    }
+
+    /* BADGE VALID */
+    .badge-valid {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background-color: var(--badge-green-bg);
+      color: var(--accent-green);
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    /* --- BUTTON ABSENSI --- */
+    .btn-submit {
+      width: 100%;
+      background-color: #27272a;
+      color: var(--text-white);
+      border: 1px solid var(--card-border);
+      padding: 14px;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 24px;
+      transition: all 0.2s ease;
+    }
+
+    .btn-submit:hover {
+      background-color: var(--accent-green);
+      color: #000000;
+      border-color: var(--accent-green);
+      transform: translateY(-1px);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER TITLE & TOMBOL KEMBALI -->
+  <div class="header-title">
+    <span>Halaman Absen Masuk</span>
+    <a href="guru-dashboard.html" class="btn-back">
+      <i data-lucide="arrow-left" style="width: 16px; height: 16px;"></i>
+      <span>Kembali</span>
+    </a>
+  </div>
+
+  <!-- CONTAINER CARD -->
+  <div class="dashboard-card">
+    
+    <!-- ICON COPY TOP RIGHT -->
+    <div class="card-action-icon" title="Salin Halaman">
+      <i data-lucide="copy" style="width: 18px; height: 18px;"></i>
+    </div>
+
+    <!-- 1. DATA NAMA & JABATAN -->
+    <div class="info-group">
+      <div class="info-label">Nama</div>
+      <div class="info-value">Ahmad Muzammil</div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Jabatan</div>
+      <div class="info-value">Guru Kelas 4A</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 2. WAKTU (TANGGAL & JAM) -->
+    <div class="info-group">
+      <div class="info-label">Tanggal</div>
+      <div class="info-value">03 Agustus 2026</div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">Jam</div>
+      <div class="info-value" id="liveClock">06.45</div>
+    </div>
+
+    <hr class="divider">
+
+    <!-- 3. VERIFIKASI (LOKASI & QR) -->
+    <div class="info-group">
+      <div class="info-label">Lokasi</div>
+      <div class="info-value">
+        <span class="badge-valid">
+          <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+          Valid
+        </span>
+      </div>
+    </div>
+
+    <div class="info-group">
+      <div class="info-label">QR</div>
+      <div class="info-value">
+        <span class="badge-valid">
+          <i data-lucide="check-circle-2" style="width: 14px; height: 14px;"></i>
+          Valid
+        </span>
+      </div>
+    </div>
+
+    <!-- 4. TOMBOL KIRIM ABSENSI -->
+    <button class="btn-submit" onclick="kirimAbsensi()">
+      <i data-lucide="send" style="width: 16px; height: 16px;"></i>
+      <span>[ KIRIM ABSENSI ]</span>
+    </button>
+
+  </div>
+
+  <script>
+    // Inisialisasi Icon Lucide
+    lucide.createIcons();
+
+    // Fungsi Kirim Absensi
+    function kirimAbsensi() {
+      alert("Berhasil! Absen Masuk atas nama Ahmad Muzammil telah terkirim.");
+      window.location.href = "guru-dashboard.html";
+    }
+  </script>
+
+</body>
+</html>
