@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
 
     // 3. Cek Status Absen dari Server (Google Apps Script)
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycby8A3lqfEggZZ1FDr1QXhiDKTtmiI60c_CFY3LPe5Yd38dZYMol73CF55XP_6k496nw/exec";
     const statusText = document.getElementById("statusText");
     const statusContainer = statusText ? (statusText.closest("div") || statusText.parentElement) : null;
     
