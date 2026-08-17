@@ -1,0 +1,25 @@
+{
+  "background_color": "#ffffff",
+  "dir": "ltr",
+  "display": "standalone",
+  "name": "ABSEN GURU",
+  "orientation": "any",
+  "scope": "/",
+  "short_name": "ABSEN",
+  "start_url": "/",
+  "theme_color": "#ffffff",
+  "id": "sdzahag4",
+  "description": "absensi guru sd zaha genggong",
+  "icons": [
+    {
+      "src": "icons/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icons/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

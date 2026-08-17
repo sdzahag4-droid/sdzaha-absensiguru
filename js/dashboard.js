@@ -1,0 +1,133 @@
+document.addEventListener("DOMContentLoaded", function () {
+    // 1. Cek apakah ada data user yang tersimpan di localStorage
+    const user = JSON.parse(localStorage.getItem("userLoggedIn"));
+
+    // Jika belum login, tendang kembali ke halaman login.html
+    if (!user) {
+        alert("Anda belum login! Silakan login terlebih dahulu.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    // 2. Tampilkan Nama dan Jabatan Guru di Dashboard
+    const namaUserEl = document.getElementById("namaUser");
+    const jabatanUserEl = document.getElementById("jabatanUser");
+
+    if (namaUserEl) namaUserEl.textContent = user.nama || "Guru";
+    if (jabatanUserEl) jabatanUserEl.textContent = user.jabatan || "-";
+
+    // 3. Cek Status Absen dari Server (Google Apps Script)
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4kpL6xEXXBkBO2aOGJGCKwFAYdk6Jwt0_8_WskgH8HvuECRg6MVIJlaxgDMAeIk_U/exec";
+    const statusText = document.getElementById("statusText");
+    const statusContainer = statusText ? (statusText.closest("div") || statusText.parentElement) : null;
+    
+    // Elemen tambahan untuk ikon dan waktu absen
+    const statusIcon = document.getElementById("statusIcon");
+    const waktuAbsenEl = document.getElementById("waktuAbsen");
+
+    if (SCRIPT_URL && statusText && statusContainer) {
+        fetch(`${SCRIPT_URL}?action=getStatus&nama=${encodeURIComponent(user.nama)}`)
+            .then(response => response.json())
+            .then(data => {
+                // Pengecekan ketat: hanya anggap "Sudah Absen" jika benar-benar true atau status eksplisit hadir/pulang
+                const isHadir = data.sudahAbsen === true || 
+                                (data.status && (data.status.toLowerCase() === 'hadir' || data.status.toLowerCase() === 'pulang'));
+
+                if (isHadir) {
+                    // --- KONDISI: SUDAH ABSEN ---
+                    statusText.innerText = "Sudah Absen";
+                    
+                    // Tampilkan waktu jam masuk jika tersedia
+                    if (waktuAbsenEl && data.waktu) {
+                        waktuAbsenEl.innerText = `Pukul: ${data.waktu}`;
+                    }
+
+                    // Ubah ikon menjadi centang hijau
+                    if (statusIcon) {
+                        if (statusIcon.tagName.toLowerCase() === 'i') {
+                            statusIcon.setAttribute('data-lucide', 'check-circle');
+                        } else {
+                            statusIcon.innerText = "✅";
+                        }
+                    }
+
+                    // Ubah warna latar belakang, border, dan teks menjadi hijau elegan
+                    statusContainer.style.backgroundColor = "rgba(16, 185, 129, 0.2)";
+                    statusContainer.style.borderColor = "#10B981";
+                    statusText.style.color = "#10B981";
+                } else {
+                    // --- KONDISI: BELUM ABSEN ---
+                    statusText.innerText = "Belum Absen";
+                    
+                    // Ikon jam untuk belum absen
+                    if (statusIcon) {
+                        if (statusIcon.tagName.toLowerCase() === 'i') {
+                            statusIcon.setAttribute('data-lucide', 'clock');
+                        } else {
+                            statusIcon.innerText = "🕒";
+                        }
+                    }
+                    
+                    // Kosongkan waktu jika belum absen
+                    if (waktuAbsenEl) {
+                        waktuAbsenEl.innerText = "";
+                    }
+                    
+                    // Warna merah untuk belum absen
+                    statusContainer.style.backgroundColor = "rgba(239, 68, 68, 0.2)";
+                    statusContainer.style.borderColor = "#EF4444";
+                    statusText.style.color = "#EF4444";
+                }
+
+                // Render ulang ikon Lucide jika menggunakan library ikon Lucide pada elemen <i>
+                if (typeof lucide !== 'undefined') {
+                    lucide.createIcons();
+                }
+            })
+            .catch(err => {
+                console.error("Gagal memuat status absen:", err);
+            });
+    }
+});
+
+// ==========================================
+// 4. FUNGSI NAVIGASI / AKSI MENU DASHBOARD
+// ==========================================
+function handleAction(actionName) {
+    switch (actionName) {
+        case 'Absen Selfie':
+            window.location.href = "scan.html";
+            break;
+        case 'Absen Masuk':
+            window.location.href = "masuk.html";
+            break;
+        case 'Absen Pulang':
+            window.location.href = "pulang.html";
+            break;
+        case 'Riwayat':
+            window.location.href = "riwayat.html";
+            break;
+        case 'Profil':
+            window.location.href = "profil.html";
+            break;
+        default:
+            console.warn("Aksi tidak dikenal:", actionName);
+    }
+}
+
+// Fungsi alternatif jika dipanggil terpisah
+function bukaScan() { window.location.href = "scan.html"; }
+function bukaAbsenMasuk() { window.location.href = "masuk.html"; }
+function bukaAbsenPulang() { window.location.href = "pulang.html"; }
+function bukaRiwayat() { window.location.href = "riwayat.html"; }
+function bukaProfil() { window.location.href = "profil.html"; }
+
+// ==========================================
+// 5. FUNGSI LOGOUT (DIUBAH KE index.html)
+// ==========================================
+function logoutUser() {
+    if (confirm("Apakah Anda yakin ingin keluar?")) {
+        localStorage.removeItem("userLoggedIn");
+        window.location.href = "index.html";
+    }
+}

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Absen Pulang</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+body {
+    background: #121212;
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+}
+
+h2.header-title {
+    font-size: 22px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.dashboard-card {
+    width: 100%;
+    max-width: 480px;
+    background: #1e1e1e;
+    border-radius: 20px;
+    padding: 25px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a2a2a;
+}
+
+.info-group {
+    margin-bottom: 20px;
+}
+
+.info-label {
+    font-size: 14px;
+    color: #a0a0a0;
+    margin-bottom: 6px;
+}
+
+.info-value {
+    font-size: 18px;
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.btn-menu {
+    width: 100%;
+    background: #2563eb;
+    color: #fff;
+    border: none;
+    padding: 14px;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s;
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-menu:hover {
+    background: #1d4ed8;
+}
+</style>
+
+</head>
+<body>
+
+<h2 class="header-title">ABSEN SELFIE (PULANG)</h2>
+
+<div class="dashboard-card">
+
+    <div class="info-group">
+        <div class="info-label">Nama</div>
+        <div class="info-value" id="namaUser">Ahmad Muzammil</div>
+    </div>
+
+    <div class="info-group">
+        <div class="info-label">Jam Pulang</div>
+        <div class="info-value">13.00</div>
+    </div>
+
+    <div class="info-group">
+        <div class="info-label">Status</div>
+        <div class="info-value" style="color: #10B981;">Pulang</div>
+    </div>
+
+    <button class="btn-menu">KIRIM</button>
+
+</div>
+
+</body>
+</html>
